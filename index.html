@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mrs Rooney’s Game Time!</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', sans-serif;
+      background: linear-gradient(to top, #fff3e0, #80deea);
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #4e342e;
+      margin-bottom: 40px;
+    }
+
+    .game-button {
+      font-size: 28px;
+      padding: 20px 40px;
+      margin: 20px;
+      border: none;
+      border-radius: 20px;
+      background-color: #ffd54f;
+      color: #4e342e;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.3s;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+      width: 400px; /* Equal width for all buttons */
+      max-width: 90%;
+    }
+
+    .game-button:hover {
+      transform: scale(1.05);
+      background-color: #fff176;
+    }
+
+    #musicToggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 10px 14px;
+      font-size: 18px;
+      background: #ffe082;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="musicToggle" onclick="toggleMusic()">🔊 Music On</button>
+
+  <h1>📚 Mrs Rooney’s Game Time!</h1>
+
+  <button class="game-button" onclick="location.href='wiggles-pop.html'">
+  <img src="wigglesicon.webp" alt="Wiggles Icon" style="height: 1em; vertical-align: middle; margin-right: 10px;">
+  Wiggles Pop Number Game
+</button>
+
+<button class="game-button" onclick="location.href='peppa-plane.html'">
+  <img src="peppapigicon.webp" alt="Peppa Pig Icon" style="height: 1em; vertical-align: middle; margin-right: 10px;">
+  Peppa Pig: Number Plane Game
+</button>
+
+<button class="game-button" onclick="location.href='pokemath.html'">
+  <img src="Poke_Ball.webp" alt="Poké Ball Icon" style="height: 1em; vertical-align: middle; margin-right: 10px;">
+  Pokémath Journey!
+</button>
+
+
+  <audio id="bgMusic" src="menubackgroundmusic.mp3" loop></audio>
+
+  <script>
+    const bgMusic = document.getElementById("bgMusic");
+    const musicToggle = document.getElementById("musicToggle");
+
+    bgMusic.volume = 0.3;
+
+    function toggleMusic() {
+      if (bgMusic.paused) {
+        bgMusic.play().catch(() => console.warn("Autoplay blocked"));
+        musicToggle.textContent = "🔊 Music On";
+      } else {
+        bgMusic.pause();
+        musicToggle.textContent = "🔇 Music Off";
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      bgMusic.play().catch(() => console.warn("Autoplay blocked"));
+    });
+  </script>
+</body>
+</html>

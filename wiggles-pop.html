@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Click the Characters!</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      margin: 0;
+      overflow: hidden;
+      text-align: center;
+      background: linear-gradient(to top, #fffde7, #b3e5fc);
+    }
+
+    h1, h2 {
+      margin: 10px;
+    }
+
+    #startButton {
+      font-size: 24px;
+      margin-top: 40px;
+      padding: 10px 20px;
+      background: #fff59d;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #countdown {
+      font-size: 36px;
+      margin: 10px 0;
+    }
+
+    #gameArea {
+      position: relative;
+      height: 70vh;
+      overflow: hidden;
+    }
+
+    .character {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    @keyframes wiggle { 0%,100% { transform: rotate(0); } 25% { transform: rotate(3deg); } 75% { transform: rotate(-3deg); } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    .count-popup {
+      position: absolute;
+      font-size: 48px;
+      font-weight: bold;
+      color: #f50057;
+      pointer-events: none;
+      animation: fadeOut 1s forwards;
+      text-shadow: 2px 2px #fff;
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-40px); }
+    }
+
+    #musicToggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      font-size: 18px;
+      padding: 8px 12px;
+      background-color: #fff9c4;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    #backToMenu {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 18px;
+      padding: 8px 12px;
+      background-color: #bbdefb;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    #nextLevel {
+      font-size: 32px;
+      margin-top: 20px;
+    }
+
+    #completionScreen {
+      display: none;
+      font-size: 36px;
+      color: green;
+      margin-top: 30px;
+    }
+
+    .floating-bg {
+      position: absolute;
+      width: 100px;
+      opacity: 0.4;
+      animation: floatAcross 60s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatAcross {
+      0% { transform: translateX(-200px); }
+      100% { transform: translateX(110vw); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating clouds -->
+  <img src="background.png" class="floating-bg" style="top: 10%; left: 800px;">
+  <img src="background.png" class="floating-bg" style="top: 30%; left: 200px;">
+  <img src="background.png" class="floating-bg" style="top: 50%; left: 0px;">
+  <img src="background.png" class="floating-bg" style="top: 70%; left: 600px;">
+  <img src="background.png" class="floating-bg" style="top: 85%; left: 400px;">
+
+  <button id="backToMenu" onclick="window.location.href='index.html'">← Back to Menu</button>
+  <button id="musicToggle" onclick="toggleMusic()">🔊 Music On</button>
+
+  <h1>Click the Characters!</h1>
+  <h2>Count: <span id="count">0</span>/10</h2>
+  <div id="countdown">Click “Start Game” to begin</div>
+  <button id="startButton" onclick="beginGame()">▶ Start Game</button>
+
+  <div id="gameArea"></div>
+  <div id="nextLevel" style="display:none;"></div>
+  <div id="completionScreen">🎉 Well done! You completed all the levels! 🎉</div>
+
+  <audio id="clickSound">
+    <source src="click.ogg" type="audio/ogg">
+  </audio>
+  <audio id="bgMusic" src="backgroundmusic.mp3" loop></audio>
+
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const countSpan = document.getElementById("count");
+    const countdown = document.getElementById("countdown");
+    const nextLevelDiv = document.getElementById("nextLevel");
+    const completionScreen = document.getElementById("completionScreen");
+    const bgMusic = document.getElementById("bgMusic");
+    const musicToggle = document.getElementById("musicToggle");
+    const clickSound = document.getElementById("clickSound");
+
+    bgMusic.volume = 0.15;
+
+    const characters = Array.from({ length: 10 }, (_, i) => `image${i + 1}.png`);
+    const animations = ["bounce", "wiggle", "float"];
+    let count = 0, level = 1, maxLevel = 3;
+    let selectedVoice = null;
+
+    window.speechSynthesis.onvoiceschanged = () => {
+      const voices = speechSynthesis.getVoices();
+      selectedVoice = voices.find(v =>
+        v.lang.toLowerCase().includes("en-au") &&
+        v.name.toLowerCase().includes("male")
+      ) || voices.find(v => v.lang.toLowerCase().includes("en-au"));
+    };
+
+    function createCharacter() {
+      const img = document.createElement("img");
+      img.classList.add("character");
+      img.src = characters[Math.floor(Math.random() * characters.length)];
+      const padding = 80;
+      const areaWidth = gameArea.offsetWidth - 150;
+      const areaHeight = gameArea.offsetHeight - 150;
+      img.style.left = padding + Math.random() * areaWidth + "px";
+      img.style.top = padding + Math.random() * areaHeight + "px";
+      img.style.animation = animations[Math.floor(Math.random() * animations.length)] + " 1.5s infinite ease-in-out";
+
+      img.onclick = () => {
+        clickSound.currentTime = 0;
+        clickSound.play();
+        count++;
+        countSpan.textContent = count;
+        showPopup(img, count);
+        speakCount(count);
+        img.remove();
+        if (count >= 10) endLevel();
+      };
+
+      gameArea.appendChild(img);
+    }
+
+    function showPopup(element, number) {
+      const popup = document.createElement("div");
+      popup.className = "count-popup";
+      popup.innerText = number;
+      popup.style.left = element.style.left;
+      popup.style.top = element.style.top;
+      gameArea.appendChild(popup);
+      setTimeout(() => popup.remove(), 1000);
+    }
+
+    function speakCount(n) {
+      const msg = new SpeechSynthesisUtterance(n.toString());
+      msg.volume = 1;
+      msg.rate = 1;
+      msg.pitch = 1;
+      if (selectedVoice) msg.voice = selectedVoice;
+      speechSynthesis.speak(msg);
+    }
+
+    function startLevel() {
+      nextLevelDiv.style.display = "none";
+      completionScreen.style.display = "none";
+      count = 0;
+      countSpan.textContent = "0";
+      gameArea.innerHTML = "";
+      for (let i = 0; i < 10; i++) createCharacter();
+    }
+
+    function endLevel() {
+      gameArea.innerHTML = "";
+      if (level >= maxLevel) {
+        completionScreen.style.display = "block";
+        let timeLeft = 10;
+        countdown.textContent = `Restarting in ${timeLeft} seconds...`;
+        const restartTimer = setInterval(() => {
+          timeLeft--;
+          countdown.textContent = `Restarting in ${timeLeft} seconds...`;
+          if (timeLeft === 0) {
+            clearInterval(restartTimer);
+            level = 1;
+            beginGame();
+          }
+        }, 1000);
+        return;
+      }
+
+      let timer = 5;
+      nextLevelDiv.style.display = "block";
+      nextLevelDiv.textContent = `Next level in ${timer}...`;
+      const interval = setInterval(() => {
+        timer--;
+        nextLevelDiv.textContent = `Next level in ${timer}...`;
+        if (timer === 0) {
+          clearInterval(interval);
+          level++;
+          startLevel();
+        }
+      }, 1000);
+    }
+
+    function beginGame() {
+      document.getElementById("startButton").style.display = "none";
+      bgMusic.play().catch(() => console.warn("Autoplay blocked"));
+      let timer = 5;
+      countdown.textContent = `Starting in ${timer}...`;
+      const interval = setInterval(() => {
+        timer--;
+        countdown.textContent = `Starting in ${timer}...`;
+        if (timer === 0) {
+          clearInterval(interval);
+          countdown.textContent = "";
+          startLevel();
+        }
+      }, 1000);
+    }
+
+    function toggleMusic() {
+      if (bgMusic.paused) {
+        bgMusic.play();
+        musicToggle.textContent = "🔊 Music On";
+      } else {
+        bgMusic.pause();
+        musicToggle.textContent = "🔇 Music Off";
+      }
+    }
+  </script>
+</body>
+</html>

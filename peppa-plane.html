@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🐷✈️ Peppa Pig: Number Plane Game</title>
+  <style>
+    body {
+      background-color: rgb(136,188,244);
+      font-family: 'Comic Sans MS', cursive;
+      margin: 0;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    h1 {
+      color: #c0392b;
+      margin-top: 20px;
+    }
+
+    #score {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: white;
+      padding: 8px 15px;
+      border-radius: 8px;
+      box-shadow: 2px 2px 5px #888;
+      z-index: 10;
+    }
+
+    #back-button {
+      background-color: #f7e36d;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px gray;
+      cursor: pointer;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+    }
+
+    #mute-button {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: #dfe6e9;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px gray;
+      cursor: pointer;
+      font-size: 1rem;
+      z-index: 10;
+    }
+
+    .number-row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
+
+    #top-row {
+      position: absolute;
+      top: 100px;
+      width: 100%;
+      z-index: 5;
+    }
+
+    #bottom-row {
+      position: absolute;
+      bottom: 80px;
+      width: 100%;
+      z-index: 5;
+    }
+
+    .number-button {
+      background-color: #fff86b;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.3rem;
+      box-shadow: 2px 2px 4px #888;
+      cursor: pointer;
+    }
+
+    #plane-container {
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: auto;
+      height: auto;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #plane {
+      width: 180px;
+      height: auto;
+      animation: bounce 1s infinite ease-in-out;
+    }
+
+    #platform {
+      position: absolute;
+      width: 150px;
+      height: 20px;
+      background: #8B4513;
+      left: 30px;
+      top: calc(50% + 90px);
+      border-radius: 4px;
+      z-index: 1;
+    }
+
+    #speak-square {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 300px;
+      background-color: #a3d5f7;
+      border-radius: 30px;
+      box-shadow: 4px 4px 15px #666;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #333;
+      line-height: 300px;
+      cursor: pointer;
+      z-index: 0;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    audio { display: none; }
+  </style>
+</head>
+<body>
+  <h1>🐷✈️ Peppa Pig: Number Plane Game</h1>
+
+  <button id="back-button" onclick="location.href='index.html'">🔙 Back to Game Library</button>
+  <button id="mute-button">🔈 Mute Music</button>
+  <div id="score">✅ Correct: 0 | ❌ Incorrect: 0</div>
+
+  <div id="top-row" class="number-row">
+    <script>for(let i=1;i<=10;i++)document.write(`<button class="number-button">${i}</button>`);</script>
+  </div>
+
+  <div id="speak-square">🔊 Tap Me</div>
+
+  <div id="platform"></div>
+  <div id="plane-container">
+    <img id="plane" src="peppa_plane.gif" alt="Peppa Plane" />
+  </div>
+
+  <div id="bottom-row" class="number-row">
+    <script>for(let i=11;i<=20;i++)document.write(`<button class="number-button">${i}</button>`);</script>
+  </div>
+
+  <audio id="bg-music" src="peppamusic.mp3" autoplay loop></audio>
+
+  <script>
+    const plane = document.getElementById("plane-container");
+    const planeImg = document.getElementById("plane");
+    const buttons = document.querySelectorAll(".number-button");
+    const score = document.getElementById("score");
+    const bgMusic = document.getElementById("bg-music");
+    const speakBtn = document.getElementById("speak-square");
+    const muteBtn = document.getElementById("mute-button");
+
+    let correct = 0;
+    let incorrect = 0;
+    let currentNumber = Math.floor(Math.random() * 20) + 1;
+    let selectedVoice = null;
+
+    window.speechSynthesis.onvoiceschanged = () => {
+      const voices = window.speechSynthesis.getVoices();
+      selectedVoice = voices.find(v =>
+        v.lang === 'en-AU' && v.name.toLowerCase().includes('female')
+      ) || voices.find(v => v.lang === 'en-AU') || voices[0];
+    };
+
+    function speak(text) {
+      const msg = new SpeechSynthesisUtterance(text);
+      msg.pitch = 1.3;
+      msg.rate = 0.9;
+      if (selectedVoice) msg.voice = selectedVoice;
+      window.speechSynthesis.speak(msg);
+    }
+
+    function updateScore() {
+      score.textContent = `✅ Correct: ${correct} | ❌ Incorrect: ${incorrect}`;
+    }
+
+    function flyTo(btn) {
+      const rect = btn.getBoundingClientRect();
+      const dx = rect.left - 30 - 40;
+      const dy = rect.top - window.innerHeight * 0.5 + 30;
+
+      plane.style.transition = 'transform 1.2s ease-in-out';
+      plane.style.transform = `translate(${dx}px, ${dy}px)`;
+
+      setTimeout(() => {
+        plane.style.transition = 'transform 0.8s ease-in-out';
+        plane.style.transform = `translate(0, 0)`;
+      }, 1600);
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const selected = parseInt(btn.textContent);
+        if (selected === currentNumber) {
+          correct++;
+          speak("Correct!");
+          flyTo(btn);
+          setTimeout(() => {
+            currentNumber = Math.floor(Math.random() * 20) + 1;
+            speak(currentNumber);
+          }, 2000);
+        } else {
+          incorrect++;
+          speak("Try again");
+        }
+        updateScore();
+      });
+    });
+
+    speakBtn.addEventListener("click", () => {
+      speak(currentNumber);
+    });
+
+    muteBtn.addEventListener("click", () => {
+      bgMusic.muted = !bgMusic.muted;
+      muteBtn.textContent = bgMusic.muted ? "🔇 Unmute Music" : "🔈 Mute Music";
+    });
+
+    bgMusic.volume = 0.2;
+    bgMusic.play().catch(() => {
+      document.body.addEventListener('click', () => bgMusic.play(), { once: true });
+    });
+
+    window.onload = () => speak(currentNumber);
+  </script>
+</body>
+</html>

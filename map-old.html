@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pokémon Map Adventure</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: 'Press Start 2P', cursive;
+    }
+
+    #mapCanvas {
+      display: block;
+      background: #a0e9ff;
+    }
+
+    #trainer {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+#badges {
+  position: absolute;
+  top: 10px;
+  right: 40px;
+  width: 160px;
+  height: 160px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+#badges img {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  filter: grayscale(100%);
+  transform-origin: 80px 80px;
+}
+
+#badges img.unlocked {
+  filter: none;
+}
+
+
+    #party {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 300px;
+      z-index: 2;
+    }
+
+    #starter {
+      width: 50px;
+    }
+
+    .party-slot {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      background: white;
+      margin: 2px;
+      border: 2px solid #333;
+    }
+
+    #messageBox {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 2px solid #333;
+      padding: 10px;
+      display: none;
+      z-index: 2;
+    }
+
+    #questionBox {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      background: white;
+      padding: 10px;
+      border: 2px solid #333;
+      display: none;
+      z-index: 3;
+      text-align: center;
+    }
+
+#pokeballSprite {
+  object-fit: contain;
+}
+
+#answerBox {
+  position: absolute;
+  bottom: 100px;
+  width: 100%;
+  display: none;
+  z-index: 3;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 0;
+}
+
+    #answerBox input[type=text] {
+      font-size: 18px;
+      padding: 5px;
+    }
+
+    .answer-option {
+  font-size: 18px;
+  padding: 20px 25px;
+  background: white;
+  border: 4px solid red;
+  border-radius: 12px;
+  width: 20vw;
+  max-width: 200px;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 black;
+  transition: transform 0.2s ease;
+}
+
+    .answer-option:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+<body>
+<div style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 5;">
+  <button onclick="cycleLevel()">Next Level</button>
+</div>
+
+  <div id="badges"></div>
+  <div id="party">
+    <img id="starter" src="" alt="Starter" />
+    <div id="partySlots"></div>
+  </div>
+  <canvas id="mapCanvas"></canvas>
+  <img id="trainer" src="" alt="Trainer" />
+<img id="pokemonSprite" style="position: absolute; display: none; width: 72px; height: 72px; z-index: 10;" />
+<img id="pokeballSprite" style="position: absolute; display: none; width: 48px; height: 48px; z-index: 9;" />
+  <div id="messageBox"></div>
+  <div id="questionBox"></div>
+  <div id="answerBox"></div>
+
+
+<audio id="catchSound">
+  <source src="pokemon_catch.mp3" type="audio/mpeg">
+</audio>
+
+<div style="position: fixed; bottom: 20px; left: 20px; z-index: 10;">
+  <button onclick="toggleMute()">🔈 Mute</button>
+</div>
+
+<div style="position: fixed; bottom: 20px; right: 20px; z-index: 10;">
+  <button onclick="exitGame()">Exit Game</button>
+</div>
+  <script>
+    localStorage.removeItem('caught');
+    const starterName = localStorage.getItem('starter') || 'pichu';
+    const trainerGender = localStorage.getItem('trainer') || 'boy';
+    const caught = JSON.parse(localStorage.getItem('caught') || '[]');
+    let clouds = [];
+    const badgeThemes = [
+  {
+    name: 'Boulder',
+    backgroundTop: '#dcdcdc',
+    backgroundBottom: '#a9a9a9',
+    wildPokemons: ['geodude', 'onix', 'sandshrew', 'diglett', 'cubone', 'rockruff'],
+    objects: ['boulder.webp', 'rockpile.webp', 'rockpillar.png'],
+cloudColor: 'grey',
+cloudCount: 5,
+music: '1_2.mp3'
+  },
+  {
+    name: 'Cascade',
+    backgroundTop: '#a0e9ff',
+    backgroundBottom: '#89c57f',
+    wildPokemons: ['psyduck', 'goldeen', 'tentacool', 'ducklett', 'manaphy', 'seel', 'gyarados', 'ninetales'],
+    objects: ['waterpool.png', 'seaplant.png'],
+cloudColor: 'white',
+cloudCount: 8,
+music: '1_2.mp3'
+  },
+  {
+    name: 'Thunder',
+    backgroundTop: '#fff44f',
+    backgroundBottom: '#c9c945',
+    wildPokemons: ['voltorb', 'magnemite', 'raikou', 'rotom', 'helioptile'],
+    objects: ['lightpost.webp', 'powerline.png'],
+cloudColor: 'lightgrey',
+cloudCount: 6,
+music: '3_4.mp3'
+  },
+  {
+    name: 'Rainbow',
+    backgroundTop: '#a3d9a5',
+    backgroundBottom: '#4caf50',
+    wildPokemons: ['oddish', 'bellsprout', 'gloom', 'chikorita', 'exeggutor', 'grotle', 'cherubi'],
+    objects: ['flowerbed.png', 'regtree.png', 'grass.png'],
+cloudColor: 'white',
+cloudCount: 10,
+music: '3_4.mp3'
+  },
+  {
+    name: 'Soul',
+    backgroundTop: '#d3bce5',
+    backgroundBottom: '#7e57c2',
+    wildPokemons: ['gastly', 'haunter', 'misdreavus', 'sableye', 'duskull', 'giratina', 'zorua','greninja'],
+    objects: ['shrine.png', 'willowtree.png'],
+cloudColor: 'violet',
+cloudCount: 3,
+music: '5_6.mp3'
+  },
+  {
+    name: 'Marsh',
+    backgroundTop: '#f8bbd0',
+    backgroundBottom: '#ce93d8',
+    wildPokemons: ['abra', 'drowzee', 'spoink', 'mr mime', 'mew', 'lunation', 'uxie'],
+    objects: ['crystalball.webp', 'teleportpad.webp'],
+cloudColor: 'plum',
+cloudCount: 5,
+music: '5_6.mp3'
+  },
+  {
+    name: 'Volcano',
+    backgroundTop: '#b71c1c',
+    backgroundBottom: '#4e342e',
+    wildPokemons: ['slugma', 'numel', 'magmar', 'vulpix', 'ponyta', 'moltres', 'infernape'],
+    objects: ['lavarock.webp', 'deadtree.png'],
+cloudColor: 'black',
+cloudCount: 7,
+music: '7_8.mp3'
+  },
+  {
+    name: 'Earth',
+    backgroundTop: '#f4e1d2',
+    backgroundBottom: '#d7ccc8',
+    wildPokemons: ['cubone', 'trapinch', 'rhyhorn', 'quagsire', 'sandaconda', 'mudsdale', 'diggersby'],
+    objects: ['cactus.png', 'skull.png'],
+cloudColor: 'tan',
+cloudCount: 4,
+music: '7_8.mp3'
+  },
+{
+  name: 'Mewtwo',
+  backgroundTop: '#1b0033',
+  backgroundBottom: '#4a148c',
+  wildPokemons: ['tyranitar', 'dragonite', 'salamence', 'goodra', 'noivern', 'dragapult', 'haxorus', 'kommo-o', 'baxcalibur', 'metagross', 'hydreigon', 'duraludon','aegislash'],
+  objects: ['labpillar.webp', 'energysphere.png', 'ruinssprite.webp'],
+  cloudColor: '#b39ddb',
+  cloudCount: 3,
+music: 'mewtwo_road.mp3'
+}
+];
+
+function createClouds(count) {
+  clouds = [];
+  for (let i = 0; i < count; i++) {
+    clouds.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.3,
+      width: 60 + Math.random() * 40,
+      height: 20 + Math.random() * 10,
+      speed: 0.1 + Math.random() * 0.2
+    });
+  }
+}
+
+function updatePartyUI() {
+  const caughtList = JSON.parse(localStorage.getItem('caught') || '[]');
+  const partySlots = document.getElementById('partySlots');
+  const children = partySlots.children;
+
+  for (let i = 0; i < children.length; i++) {
+    const slot = children[i];
+    const name = caughtList[i];
+    if (name) {
+      const testImg = new Image();
+      testImg.onerror = () => {
+        slot.style.backgroundImage = `url(${name}.webp)`;
+      };
+      testImg.onload = () => {
+        slot.style.backgroundImage = `url(${name}.gif)`;
+      };
+      testImg.src = `${name}.gif`;
+
+      slot.style.backgroundSize = 'contain';
+      slot.style.backgroundRepeat = 'no-repeat';
+      slot.style.backgroundPosition = 'center';
+    } else {
+      slot.style.backgroundImage = '';
+    }
+  }
+}
+
+
+const badgeIndex = parseInt(localStorage.getItem('badgeIndex') || '0');
+const currentTheme = badgeThemes[badgeIndex] || badgeThemes[0];
+
+// Create bg music element dynamically
+const bgMusic = document.createElement('audio');
+bgMusic.id = 'bgmusic';
+bgMusic.loop = true;
+bgMusic.src = currentTheme.music || 'default_theme.mp3';  // Fallback if missing
+document.body.appendChild(bgMusic);
+
+    const typeSetting = localStorage.getItem('type') || 'addition';
+    const difficultySetting = parseInt(localStorage.getItem('difficulty') || '0');
+
+let questionPool = [];
+
+fetch('pokemon_math_questions.csv')
+  .then(response => response.text())
+  .then(csv => {
+    questionPool = csv.trim().split('\n').slice(1).map(line => {
+      const [a, b, answer, wrong1, wrong2, difficulty, type] = line.split(',');
+      return {
+        a: Number(a.trim()),
+        b: Number(b.trim()),
+        answer: answer.trim(),
+        type: type.trim().toLowerCase(),
+        difficulty: parseInt(difficulty.trim(), 10)
+      };
+    });
+
+    // Start the game once questions are loaded
+    animate();
+  })
+  .catch(error => {
+    console.error("Failed to load CSV:", error);
+    // fallback question in case CSV load fails
+    questionPool = [{ a: 1, b: 1, answer: "2", wrong1: "4", wrong2: "1", type: "addition", difficulty: 0 }];
+    animate();
+  });
+
+    const allBadges = [
+      'boulderbadge.webp', 'cascadebadge.webp', 'thunderbadge.png', 'rainbowbadge.png',
+      'soulbadge.png', 'marshbadge.png', 'volcanobadge.webp', 'earthbadge.webp'
+    ];
+
+    const starterImg = document.getElementById('starter');
+    starterImg.src = `${starterName}.gif`;
+starterImg.addEventListener('click', () => {
+  const audio = new Audio(`${starterName}.mp3`);
+  audio.play();
+});
+
+
+    const partySlots = document.getElementById('partySlots');
+for (let i = 0; i < 5; i++) {
+  const slot = document.createElement('div');
+  slot.className = 'party-slot';
+  partySlots.appendChild(slot);
+}
+updatePartyUI();
+
+const badgeContainer = document.getElementById('badges');
+const radius = 60; // Radius of the circle in pixels
+const centerX = 75;
+const centerY = 75;
+
+allBadges.forEach((badge, index) => {
+  const angle = (2 * Math.PI * index) / allBadges.length;
+  const x = centerX + radius * Math.cos(angle);
+  const y = centerY + radius * Math.sin(angle);
+
+  const img = document.createElement('img');
+  img.src = badge;
+  img.style.left = `${x}px`;
+  img.style.top = `${y}px`;
+
+  if (index < badgeIndex) img.classList.add('unlocked');
+  badgeContainer.appendChild(img);
+});
+
+
+    const canvas = document.getElementById('mapCanvas');
+    const ctx = canvas.getContext('2d');
+    const trainerImg = document.getElementById('trainer');
+    trainerImg.src = trainerGender === 'girl' ? 'pokegirlrun.gif' : 'pokeboyrun.gif';
+if (trainerGender === 'girl') {
+  trainerImg.style.transform = 'scaleX(-1)';
+} else {
+  trainerImg.style.transform = 'scaleX(1)';
+}
+
+
+function getRandomUniqueItems(arr, count) {
+  const shuffled = [...arr].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, count);
+}
+
+const pokemonsOnPath = getRandomUniqueItems(currentTheme.wildPokemons, 5);
+
+function loadPokemonSprite(name, callback) {
+  const img = new Image();
+
+  img.onerror = function () {
+    img.onerror = null;
+    img.src = `${name}.webp`;
+  };
+
+  img.onload = function () {
+    if (callback) callback(img);
+  };
+
+  img.src = `${name}.gif`;
+}
+
+const pokemonSprites = {};
+pokemonsOnPath.forEach(name => {
+  loadPokemonSprite(name, img => {
+    pokemonSprites[name] = img;
+  });
+});
+
+
+    const stops = pokemonsOnPath.length;
+    let stopSpacing = 0;
+    let currentStop = 0;
+    let questionShownForStop = false;
+    let trainerX = 0;
+
+    const objectTypes = currentTheme.objects;
+    const backgroundObjects = [];
+    const foregroundObjects = [];
+    const NUM_RANDOM_OBJECTS = 20;
+
+    function generateObjects() {
+      backgroundObjects.length = 0;
+      foregroundObjects.length = 0;
+
+      for (let i = 0; i < NUM_RANDOM_OBJECTS; i++) {
+        const obj = {
+          img: new Image(),
+          src: objectTypes[Math.floor(Math.random() * objectTypes.length)],
+          x: Math.random() * canvas.width,
+          y: canvas.height / 2 + Math.random() * (canvas.height / 2 - 48),
+          size: 32 + Math.random() * 32
+        };
+        obj.img.src = obj.src;
+        if (Math.random() < 0.5) backgroundObjects.push(obj);
+        else foregroundObjects.push(obj);
+      }
+
+      stopSpacing = canvas.width / (stops + 1);
+      const grassY = canvas.height / 2 - 40;
+
+      for (let i = 0; i < stops; i++) {
+        const stopX = stopSpacing * (i + 1);
+        const obj = {
+          img: new Image(),
+          src: objectTypes[Math.floor(Math.random() * objectTypes.length)],
+          x: stopX + 20,
+          y: grassY,
+          size: 48
+        };
+        obj.img.src = obj.src;
+        foregroundObjects.push(obj);
+      }
+    }
+function generateClouds() {
+  clouds.length = 0;
+  for (let i = 0; i < (currentTheme.cloudCount || 5); i++) {
+    clouds.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * (canvas.height / 2 - 50),
+      width: 100 + Math.random() * 60,
+      height: 40,
+      speed: -(0.2 + Math.random() * 0.3)
+    });
+  }
+}
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const grassY = canvas.height / 2;
+      trainerImg.style.top = `${grassY - 48}px`;
+      generateObjects();
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      generateClouds();
+      animate();
+    });
+
+    resizeCanvas();
+    generateClouds();
+
+    function drawBackground() {
+ctx.fillStyle = currentTheme.backgroundTop;
+ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+ctx.fillStyle = currentTheme.backgroundBottom;
+ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+
+      
+
+ctx.fillStyle = currentTheme.cloudColor || 'white';
+clouds.forEach(cloud => {
+  drawCloud(ctx, cloud.x, cloud.y, cloud.width, cloud.height);
+
+  cloud.x += cloud.speed;
+  if (cloud.x + cloud.width < 0) {
+    cloud.x = canvas.width + cloud.width;
+  }
+});
+
+
+      backgroundObjects.forEach(obj => {
+        ctx.drawImage(obj.img, obj.x, obj.y, obj.size, obj.size);
+      });
+    }
+
+    function drawForegroundObjects() {
+      foregroundObjects.forEach(obj => {
+        ctx.drawImage(obj.img, obj.x, obj.y, obj.size, obj.size);
+      });
+    }
+
+    function updateTrainerPosition() {
+      trainerImg.style.left = `${trainerX}px`;
+    }
+
+    function showMessage(msg) {
+      const msgBox = document.getElementById('messageBox');
+      msgBox.textContent = msg;
+      msgBox.style.display = 'block';
+      setTimeout(() => msgBox.style.display = 'none', 3000);
+    }
+
+function askQuestion(pokemon) {
+  const questionBox = document.getElementById('questionBox');
+  const answerBox = document.getElementById('answerBox');
+  const inputMode = (localStorage.getItem('answerType') || 'Text').toLowerCase();
+
+  // Show animated GIF next to the trainer
+  const pokemonImgEl = document.getElementById('pokemonSprite');
+  pokemonImgEl.style.filter = 'none';
+loadPokemonSprite(pokemon, img => {
+  pokemonImgEl.src = img.src;
+  pokemonImgEl.style.display = 'block';
+  pokemonImgEl.style.left = `${trainerX + 60}px`;
+  pokemonImgEl.style.top = `${canvas.height / 2 - 40}px`;
+});
+  pokemonImgEl.src = `${pokemon}.gif`;
+  pokemonImgEl.style.display = 'block';
+  pokemonImgEl.style.left = `${trainerX + 60}px`;
+  pokemonImgEl.style.top = `${canvas.height / 2 - 40}px`;
+
+  const filtered = questionPool.filter(q => q.type === typeSetting && q.difficulty === difficultySetting);
+  const questionObj = filtered[Math.floor(Math.random() * filtered.length)] || {
+    a: 2, b: 2, type: 'addition', answer: '4', wrong1: '3', wrong2: '5'
+  };
+
+  let operator = '+';
+  if (questionObj.type === 'subtraction') operator = '-';
+  else if (questionObj.type === 'multiplication') operator = '×';
+  else if (questionObj.type === 'division') operator = '÷';
+
+  const questionStr = `${questionObj.a} ${operator} ${questionObj.b}`;
+  questionBox.innerHTML = `A wild <strong>${pokemon}</strong> appears!<br>Solve to catch it now!<br><br><strong>${questionStr}</strong>`;
+  questionBox.style.display = 'block';
+  answerBox.innerHTML = '';
+  answerBox.style.display = 'flex';
+
+  if (inputMode === 'text') {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Your answer';
+    answerBox.appendChild(input);
+    input.focus();
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const userAnswer = input.value.trim();
+        handleAnswer(userAnswer === questionObj.answer, pokemon);
+      }
+    });
+  } else {
+    const options = [questionObj.answer, questionObj.wrong1, questionObj.wrong2]
+      .sort(() => Math.random() - 0.5);
+
+    options.forEach(option => {
+      const wrapper = document.createElement('div');
+      wrapper.style.flex = '1';
+      wrapper.style.display = 'flex';
+      wrapper.style.justifyContent = 'center';
+
+      const btn = document.createElement('div');
+      btn.className = 'answer-option';
+      btn.innerText = option;
+      btn.onclick = () => {
+        handleAnswer(option === questionObj.answer, pokemon);
+      };
+
+      wrapper.appendChild(btn);
+      answerBox.appendChild(wrapper);
+    });
+  }
+}
+
+
+function handleAnswer(isCorrect, pokemon) {
+  document.getElementById('questionBox').style.display = 'none';
+  document.getElementById('answerBox').style.display = 'none';
+
+  const pokemonSprite = document.getElementById('pokemonSprite');
+  const pokeballSprite = document.getElementById('pokeballSprite');
+
+  if (isCorrect) {
+  const ballStartX = trainerX + 10;
+  const ballEndX = trainerX + 60;
+  const ballY = parseInt(pokemonSprite.style.top || '200') + 10;
+
+  // Reset GIF to ensure it replays
+  pokeballSprite.style.display = 'none';
+  pokeballSprite.src = ''; // Reset
+  pokeballSprite.offsetHeight; // Force reflow
+  pokeballSprite.src = `pokeballthrow.gif?${Date.now()}`; // Cache busting
+  pokeballSprite.style.left = `${ballStartX}px`;
+  pokeballSprite.style.top = `${ballY}px`;
+  pokeballSprite.style.display = 'block';
+
+  let currentX = ballStartX;
+
+  const interval = setInterval(() => {
+    currentX += 4; // Walking speed
+    pokeballSprite.style.left = `${currentX}px`;
+
+    if (currentX >= ballEndX - 48) { // When ball hits Pokémon
+      clearInterval(interval);
+ document.getElementById('questionBox').style.display = 'none';
+ pokemonSprite.style.filter = 'brightness(0) saturate(100%) invert(14%) sepia(97%) saturate(7492%) hue-rotate(356deg) brightness(105%) contrast(119%)';
+document.getElementById('catchSound').play();
+
+      // Wait a moment to let the GIF finish
+      setTimeout(() => {
+        pokeballSprite.style.display = 'none';
+        pokemonSprite.style.display = 'none';
+
+        caught.push(pokemon);
+        localStorage.setItem('caught', JSON.stringify(caught));
+        updatePartyUI();
+        showMessage(`You caught ${pokemon}!`);
+
+        setTimeout(() => {
+          currentStop++;
+          questionShownForStop = false;
+        }, 2000);
+      }, 500); // ~GIF duration
+    }
+  }, 16); // ~60fps
+}
+ else {
+    pokemonSprite.style.display = 'none';
+    showMessage(`${pokemon} got away!`);
+    setTimeout(() => {
+      currentStop++;
+      questionShownForStop = false;
+    }, 2000);
+  }
+}
+
+
+function animate() {
+  drawBackground();
+  updateTrainerPosition();
+  drawForegroundObjects();
+
+  if (currentStop < stops) {
+    const targetX = stopSpacing * (currentStop + 1);
+    if (trainerX < targetX) {
+      const WALK_SPEED = 2;
+trainerX = Math.min(trainerX + WALK_SPEED, targetX);
+    } else if (!questionShownForStop) {
+      questionShownForStop = true;
+      askQuestion(pokemonsOnPath[currentStop]);
+    }
+  }
+
+  requestAnimationFrame(animate); // Always keep animating
+}
+
+function questionBoxVisible() {
+  return document.getElementById('questionBox').style.display === 'block';
+}
+
+function drawCloud(ctx, x, y, w, h) {
+  ctx.fillStyle = currentTheme.cloudColor || 'white';
+  ctx.beginPath();
+  ctx.ellipse(x, y, w * 0.5, h * 0.5, 0, 0, Math.PI * 2);
+  ctx.ellipse(x + w * 0.3, y - h * 0.2, w * 0.4, h * 0.4, 0, 0, Math.PI * 2);
+  ctx.ellipse(x - w * 0.3, y - h * 0.2, w * 0.4, h * 0.4, 0, 0, Math.PI * 2);
+  ctx.fill();
+}
+function cycleLevel() {
+  const current = parseInt(localStorage.getItem('badgeIndex') || '0');
+  const next = (current + 1) % badgeThemes.length;
+  localStorage.setItem('badgeIndex', next.toString());
+  location.reload();
+}
+
+function toggleMute() {
+  const music = document.getElementById('bgmusic');
+  const muteBtn = document.getElementById('muteBtn');
+
+  if (music.muted || music.paused) {
+    music.muted = false;
+    music.play().catch(e => console.log("Unable to play:", e));
+    muteBtn.innerText = '🔈 Mute';
+  } else {
+    music.muted = true;
+    muteBtn.innerText = '🔇 Unmute';
+  }
+}
+
+function exitGame() {
+  if (confirm("Are you sure you want to exit the game?")) {
+    window.location.href = 'index.html'; // or another home page
+  }
+}
+let musicStarted = false;
+window.addEventListener('click', startBackgroundMusic);
+window.addEventListener('touchstart', startBackgroundMusic);
+
+function startBackgroundMusic() {
+  if (musicStarted) return;
+  musicStarted = true;
+  
+  const music = document.getElementById('bgmusic');
+  music.play().catch(err => console.log('Play error:', err));
+}
+
+
+  </script>
+</body>
+</html>

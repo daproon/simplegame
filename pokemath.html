@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokémon Adventure Start</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Press Start 2P', cursive;
+      background: linear-gradient(to bottom, #a0e9ff, #ffffff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    h1, h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #d62828;
+      text-align: center;
+    }
+
+    .character-select, .question-type, .difficulty-select, .starter-select, .answer-type {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .characters, .starters {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .characters img, .starters img {
+      width: 100px;
+      cursor: pointer;
+      border: 4px solid transparent;
+      border-radius: 12px;
+    }
+
+    .characters img.selected, .starters img.selected {
+      border-color: #ffcb05;
+      background: #ffffffaa;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .option {
+      padding: 10px 16px;
+      background: #f7e017;
+      border: 2px solid #333;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .option.selected {
+      background: #ffa500;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    button {
+      font-family: 'Press Start 2P', cursive;
+      background-color: #3b4cca;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.7rem;
+    }
+
+    button:hover {
+      background-color: #2a3698;
+    }
+
+    .mute-button, .exit-button {
+      position: absolute;
+      top: 10px;
+      background: #ff5555;
+      padding: 10px;
+      border-radius: 10px;
+      color: white;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    .mute-button {
+      right: 10px;
+    }
+    .exit-button {
+      right: 100px;
+      background: #d62828;
+    }
+
+    .option.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  background: #ddd;
+  border-color: #999;
+  color: #999;
+}
+
+  </style>
+</head>
+<body>
+  <div id="page1">
+    <h1>Choose Your Trainer</h1>
+    <div class="character-select">
+      <div class="characters">
+        <img id="boy" src="pokeboyrun.gif" alt="Boy Trainer" />
+        <img id="girl" src="pokegirlrun.gif" alt="Girl Trainer" style="transform: scaleX(-1);" />
+      </div>
+    </div>
+
+    <div class="difficulty-select">
+      <h2>Select Year Level(s)</h2>
+      <div class="options" id="difficultyLevels">
+        <div class="option">Kindergarten</div>
+        <div class="option">Year 1</div>
+        <div class="option">Year 2</div>
+        <div class="option">Year 3</div>
+        <div class="option">Year 4</div>
+        <div class="option">Year 5</div>
+        <div class="option">Year 6</div>
+      </div>
+    </div>
+
+      <div class="question-type">
+      <h2>Select Question Types</h2>
+      <div class="options" id="questionTypes">
+        <div class="option">Addition</div>
+        <div class="option">Subtraction</div>
+        <div class="option">Multiplication</div>
+        <div class="option">Division</div>
+      </div>
+    </div>
+
+    <div class="answer-type">
+      <h2>Select Answer Type</h2>
+      <div class="options" id="answerType">
+        <div class="option">Text</div>
+        <div class="option">Click</div>
+      </div>
+    </div>
+
+    <div class="boss-timer">
+  <h2>Boss Timer</h2>
+  <div class="options" id="bossTimerOptions">
+    <div class="option">Off</div>
+    <div class="option">10 seconds</div>
+    <div class="option">20 seconds</div>
+    <div class="option">30 seconds</div>
+       </div>
+     </div>
+
+    <div class="starter-select">
+      <h2>Choose Your Starter</h2>
+      <div class="starters">
+        <img data-name="pichu" src="pichu.gif" alt="Pichu" />
+        <img data-name="gible" src="gible.gif" alt="Gible" />
+        <img data-name="eevee" src="eevee.gif" alt="Eevee" />
+        <img data-name="riolu" src="riolu.webp" alt="Riolu" />
+        <img data-name="charmander" src="charmander.webp" alt="Charmander" />
+        <img data-name="bulbasaur" src="bulbasaur.webp" alt="Bulbasaur" />
+        <img data-name="squirtle" src="squirtle.gif" alt="Squirtle" />
+        <img data-name="igglybuff" src="igglybuff.gif" alt="igglybuff" />
+      </div>
+    </div>
+
+    <div class="button-row">
+      <button onclick="exitGame()">Exit Game</button>
+      <button id="startBtn" onclick="startGame()">Start Game</button>
+      <button id="continueBtn" style="display:none;" onclick="continueGame()">Continue Game</button>
+      <button id="newSaveBtn" style="display:none;" onclick="newSave()">New Save</button>
+    </div>
+  </div>
+
+  <div class="mute-button" onclick="toggleMute()">Mute</div>
+
+  <audio autoplay loop id="bgmusic">
+    <source src="pokesettings.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const questionOptions = document.querySelectorAll('#questionTypes .option');
+    const difficultyOptions = document.querySelectorAll('#difficultyLevels .option');
+    const answerOptions = document.querySelectorAll('#answerType .option');
+    const characters = document.querySelectorAll('.characters img');
+    const starters = document.querySelectorAll('.starters img');
+    const bgMusic = document.getElementById('bgmusic');
+    const bossTimerOptions = document.querySelectorAll('#bossTimerOptions .option');
+    bgMusic.volume = 0.2;
+
+    const isMuted = localStorage.getItem('muted') === 'true';
+    bgMusic.muted = isMuted;
+    document.querySelector('.mute-button').textContent = isMuted ? 'Unmute' : 'Mute';
+
+    questionOptions.forEach(opt => opt.addEventListener('click', () => opt.classList.toggle('selected')));
+    difficultyOptions.forEach(opt => opt.addEventListener('click', () => {
+  opt.classList.toggle('selected');
+  updateQuestionTypeAvailability();
+}));
+
+    answerOptions.forEach(opt => {
+      opt.addEventListener('click', () => {
+        answerOptions.forEach(a => a.classList.remove('selected'));
+        opt.classList.add('selected');
+      });
+    });
+    characters.forEach(char => char.addEventListener('click', () => {
+      characters.forEach(c => c.classList.remove('selected'));
+      char.classList.add('selected');
+    }));
+    bossTimerOptions.forEach(opt => {
+  opt.addEventListener('click', () => {
+    bossTimerOptions.forEach(a => a.classList.remove('selected'));
+    opt.classList.add('selected');
+  });
+});
+    starters.forEach(poke => poke.addEventListener('click', () => {
+      starters.forEach(p => p.classList.remove('selected'));
+      poke.classList.add('selected');
+
+      if (localStorage.getItem('muted') !== 'true') {
+        const audio = new Audio(`${poke.dataset.name}.mp3`);
+        audio.play();
+      }
+    }));
+
+    window.addEventListener('load', () => {
+      bgMusic.play().catch(() => {});
+    });
+
+    function saveSettings() {
+      const selectedCharacter = document.querySelector('.characters img.selected');
+      const selectedTypes = [...document.querySelectorAll('#questionTypes .option.selected')];
+      const selectedLevels = [...document.querySelectorAll('#difficultyLevels .option.selected')];
+      const selectedAnswer = document.querySelector('#answerType .option.selected');
+      const selectedBossTimer = document.querySelector('#bossTimerOptions .option.selected');
+      const selectedStarter = document.querySelector('.starters img.selected')?.dataset.name;
+
+      if (!selectedCharacter || selectedTypes.length === 0 || selectedLevels.length === 0 || !selectedAnswer || !selectedBossTimer || !selectedStarter) {
+        alert('Please make all selections before continuing!');
+        return false;
+      }
+
+      localStorage.setItem('trainer', selectedCharacter.id);
+      localStorage.setItem('questionTypes', JSON.stringify(selectedTypes.map(e => e.textContent)));
+      localStorage.setItem('difficultyLevels', JSON.stringify(selectedLevels.map(e => e.textContent)));
+      localStorage.setItem('answerType', selectedAnswer.textContent);
+      localStorage.setItem('bossTimer', selectedBossTimer.textContent);
+      localStorage.setItem('starter', selectedStarter);
+      return true;
+    }
+
+    function startGame() {
+      if (saveSettings()) {
+        window.location.href = 'map.html';
+      }
+    }
+
+    function continueGame() {
+      window.location.href = 'map.html';
+    }
+
+    function newSave() {
+  // Remember mute state
+  const wasMuted = localStorage.getItem('muted');
+
+  // Clear all save data
+  localStorage.clear();
+
+  // Restore mute state
+  if (wasMuted) {
+    localStorage.setItem('muted', wasMuted);
+  }
+
+  // Save current selections
+  if (saveSettings()) {
+    window.location.href = 'map.html';
+  }
+}
+
+    function toggleMute() {
+      bgMusic.muted = !bgMusic.muted;
+      localStorage.setItem('muted', bgMusic.muted ? 'true' : 'false');
+      document.querySelector('.mute-button').textContent = bgMusic.muted ? 'Unmute' : 'Mute';
+    }
+
+    function exitGame() {
+      if (confirm('Are you sure you want to exit? All progress will be lost.')) {
+        localStorage.clear();
+        window.location.href = 'index.html';
+      }
+    }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const hasSave = localStorage.getItem('starter') !== null || localStorage.getItem('trainer') !== null;
+  if (hasSave) {
+    document.getElementById('continueBtn').style.display = 'inline-block';
+    document.getElementById('newSaveBtn').style.display = 'inline-block';
+    document.getElementById('startBtn').style.display = 'none';
+  }
+  
+  updateQuestionTypeAvailability();
+});
+
+    function enableMusicOnInteraction() {
+      bgMusic.play().catch(() => {});
+      document.removeEventListener('click', enableMusicOnInteraction);
+    }
+    document.addEventListener('click', enableMusicOnInteraction);
+  
+  
+  function updateQuestionTypeAvailability() {
+  const selectedLevels = [...document.querySelectorAll('#difficultyLevels .option.selected')]
+    .map(el => el.textContent.trim());
+
+  const isYear2Plus = selectedLevels.some(level =>
+    ['Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6'].includes(level)
+  );
+
+  const questionTypeOptions = document.querySelectorAll('#questionTypes .option');
+
+  questionTypeOptions.forEach(opt => {
+    const text = opt.textContent.trim();
+
+    if (['Multiplication', 'Division'].includes(text)) {
+      if (isYear2Plus) {
+        // Enable
+        opt.classList.remove('disabled');
+      } else {
+        // Disable and unselect
+        opt.classList.add('disabled');
+        opt.classList.remove('selected');
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
