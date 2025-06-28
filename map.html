@@ -807,7 +807,7 @@ boss: {
   pokemon: 'mewtwo',                 // image/gif name
   background: 'mewtwo_bkg.png',      // static background image
   music: 'mewtwo_battle.mp3',        // intense battle music
-  health: 14                         // boss HP
+  health: 16                         // boss HP
 }
 }
 ];
@@ -1409,35 +1409,51 @@ async function startBossBattle() {
   const playerPartyDiv = document.getElementById('playerParty');
 
   overlay.style.display = 'flex';
-  overlay.style.background = `url(${currentTheme.boss.background}) center/cover no-repeat`;
 
-  // Position sprites closer to edges and slightly higher
-  playerSprite.style.position = 'absolute';
-  playerSprite.style.left = '160px';
-  playerSprite.style.bottom = '220px';
+// Wait for background image to load before setting
+await new Promise((resolve) => {
+  const bgImg = new Image();
+  bgImg.onload = resolve;
+  bgImg.onerror = resolve;
+  bgImg.src = currentTheme.boss.background;
+});
+overlay.style.background = `url(${currentTheme.boss.background}) center/cover no-repeat`;
 
-  bossSprite.style.position = 'absolute';
-  bossSprite.style.right = '30px';
-  bossSprite.style.bottom = '180px';
-
-  bossSprite.onerror = () => { bossSprite.src = `${currentTheme.boss.pokemon}.webp`; };
+// Preload boss sprite image fully
+await new Promise((resolve) => {
+  bossSprite.onload = resolve;
+  bossSprite.onerror = () => {
+    bossSprite.src = `${currentTheme.boss.pokemon}.webp`;
+    resolve();
+  };
   bossSprite.src = `${currentTheme.boss.pokemon}.gif`;
-  if (!muted) {
+});
+
+// Position sprites after images are ready
+playerSprite.style.position = 'absolute';
+playerSprite.style.left = '160px';
+playerSprite.style.bottom = '220px';
+
+bossSprite.style.position = 'absolute';
+bossSprite.style.right = '30px';
+bossSprite.style.bottom = '180px';
+bossSprite.style.opacity = '0';
+
+// Play boss cry if not muted
+if (!muted) {
   const bossCry = new Audio(`${currentTheme.boss.pokemon}.mp3`);
   bossCry.play().catch(() => {});
 }
-  bossSprite.style.opacity = '0';
 
-  // Wait for layout to calculate
-  await new Promise(res => setTimeout(res, 50));
-  const bossRect = bossSprite.getBoundingClientRect();
-  const overlayRect = overlay.getBoundingClientRect();
+// Fade in boss sprite
+bossSprite.style.transition = 'opacity 1s ease';
+bossSprite.style.opacity = '1';
+await new Promise(res => setTimeout(res, 1000));
 
-  // Position health bar ABOVE the boss sprite, centered
-  healthBar.style.position = 'absolute';
-  healthBar.style.top = `${bossRect.top - overlayRect.top - 50}px`;
-  healthBar.style.left = `${bossRect.left - overlayRect.left + bossRect.width / 2}px`;
-  healthBar.style.transform = 'translateX(-50%)';
+positionBossHealthBar();
+
+window.addEventListener('resize', positionBossHealthBar);
+
 
   // Setup party list
   const team = caught.includes(starterName) ? [...caught] : [...caught, starterName];
@@ -2377,6 +2393,21 @@ function getProjectileGifForPokemon(name) {
   }
   return themeProjectiles[currentTheme.name] || 'default_projectile.gif';
 }
+
+function positionBossHealthBar() {
+  const bossSprite = document.getElementById('bossPokemonSprite');
+  const healthBar = document.getElementById('bossHealthBar');
+  const overlay = document.getElementById('bossBattleOverlay');
+
+  const bossRect = bossSprite.getBoundingClientRect();
+  const overlayRect = overlay.getBoundingClientRect();
+
+  healthBar.style.position = 'absolute';
+  healthBar.style.top = `${bossRect.top - overlayRect.top - 50}px`;
+  healthBar.style.left = `${bossRect.left - overlayRect.left + bossRect.width / 2}px`;
+  healthBar.style.transform = 'translateX(-50%)';
+}
+
 
 
   </script>
