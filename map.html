@@ -1400,6 +1400,7 @@ async function startBossBattle() {
   bgMusic.currentTime = 0;
 
   const overlay = document.getElementById('bossBattleOverlay');
+  const overlayRect = overlay.getBoundingClientRect();
   const bossSprite = document.getElementById('bossPokemonSprite');
   const playerSprite = document.getElementById('playerPokemonSprite');
   const healthBar = document.getElementById('bossHealthBar');
