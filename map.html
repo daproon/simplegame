@@ -1300,6 +1300,16 @@ loadPokemonSprite(pokemon, img => {
     answerBox.appendChild(input);
     input.focus();
 
+    input.addEventListener('input', (e) => {
+  const cleaned = input.value.replace(/,/g, '').replace(/\D/g, '');
+  if (cleaned) {
+    input.value = Number(cleaned).toLocaleString('en-AU');
+  } else {
+    input.value = '';
+  }
+});
+
+
     input.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         const userAnswer = input.value.trim();
@@ -1318,7 +1328,7 @@ loadPokemonSprite(pokemon, img => {
 
       const btn = document.createElement('div');
       btn.className = 'answer-option';
-      btn.innerText = option;
+      btn.innerText = Number(option).toLocaleString('en-AU');
       btn.onclick = () => {
         handleAnswer(option === questionObj.answer, pokemon);
       };
@@ -1701,6 +1711,16 @@ if (bossTimeoutMs > 0) {
       answerBox.appendChild(input);
       input.focus();
 
+      input.addEventListener('input', (e) => {
+  const cleaned = input.value.replace(/,/g, '').replace(/\D/g, '');
+  if (cleaned) {
+    input.value = Number(cleaned).toLocaleString('en-AU');
+  } else {
+    input.value = '';
+  }
+});
+
+
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           const userAnswer = input.value.trim();
@@ -1715,7 +1735,7 @@ if (bossTimeoutMs > 0) {
       options.forEach(option => {
         const btn = document.createElement('div');
         btn.className = 'answer-option';
-        btn.innerText = option;
+        btn.innerText = Number(option).toLocaleString('en-AU');
         btn.onclick = () => {
           if (timerId) clearInterval(timerId);
           resolve(option === questionObj.answer);
