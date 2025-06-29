@@ -556,6 +556,75 @@ button:hover {
   transform: scaleX(-1);
 }
 
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
+  }
+
+  #startMessage,
+  #questionBox,
+  #bossQuestionBox,
+  #bossResultText {
+    font-size: 16px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    max-width: 90vw;
+  }
+
+  .answer-option {
+    font-size: 16px;
+    padding: 20px 25px;
+    width: 80vw;
+    max-width: none;
+  }
+
+  #badges {
+    width: 120px;
+    height: 120px;
+    right: 20px;
+  }
+
+  #party {
+    width: 200px;
+    left: 10px;
+  }
+
+  .party-slot {
+    width: 40px;
+    height: 40px;
+  }
+
+  #playerParty img {
+    width: 24px;
+    height: 24px;
+  }
+
+  #messageBox,
+  #bossEffectivenessMessage {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  #bossBattleContent {
+    flex-wrap: wrap;
+  }
+
+  .player-side, .boss-side {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  #muteBtn, #exitBtn {
+    font-size: 20px;
+    padding: 16px 20px;
+  }
+
+  #mobileControls {
+    display: flex;
+  }
+}
+
+
   </style>
 </head>
 <body>
