@@ -988,7 +988,7 @@ bgMusic.loop = true;
 bgMusic.src = currentTheme.music || 'default_theme.mp3';  // Fallback if missing
 document.body.appendChild(bgMusic);
 
-    const typeSetting = JSON.parse(localStorage.getItem('type') || '["addition"]');
+    const typeSetting = JSON.parse(localStorage.getItem('questionTypes') || '["addition"]');
 const difficultySetting = JSON.parse(localStorage.getItem('difficultyLevels') || '[0]');
 
     const bossTimerSetting = localStorage.getItem('bossTimer') || 'Off';
