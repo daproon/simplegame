@@ -988,8 +988,8 @@ bgMusic.loop = true;
 bgMusic.src = currentTheme.music || 'default_theme.mp3';  // Fallback if missing
 document.body.appendChild(bgMusic);
 
-    const typeSetting = localStorage.getItem('type') || 'addition';
-    const difficultySetting = parseInt(localStorage.getItem('difficulty') || '0');
+    const typeSetting = JSON.parse(localStorage.getItem('type') || '["addition"]');
+const difficultySetting = JSON.parse(localStorage.getItem('difficultyLevels') || '[0]');
 
     const bossTimerSetting = localStorage.getItem('bossTimer') || 'Off';
 let bossTimeoutMs = 0;
@@ -1277,7 +1277,7 @@ loadPokemonSprite(pokemon, img => {
   pokemonImgEl.style.left = `${trainerX + 60}px`;
   pokemonImgEl.style.top = `${canvas.height / 2 - 40}px`;
 
-  const filtered = questionPool.filter(q => q.type === typeSetting && q.difficulty === difficultySetting);
+  const filtered = questionPool.filter(q => typeSetting.includes(q.type) && difficultySetting.includes(q.difficulty));
   const questionObj = filtered[Math.floor(Math.random() * filtered.length)] || {
     a: 2, b: 2, type: 'addition', answer: '4', wrong1: '3', wrong2: '5'
   };
@@ -1644,7 +1644,7 @@ window.addEventListener('resize', positionBossHealthBar);
 
 function askBossQuestionWithTimer(questionBox, answerBox, timerDisplay) {
   return new Promise(resolve => {
-    const filtered = questionPool.filter(q => q.type === typeSetting && q.difficulty === difficultySetting);
+    const filtered = questionPool.filter(q => typeSetting.includes(q.type) && difficultySetting.includes(q.difficulty));
     const questionObj = filtered[Math.floor(Math.random() * filtered.length)] || {
       a: 2, b: 2, type: 'addition', answer: '4', wrong1: '3', wrong2: '5'
     };
