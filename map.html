@@ -1022,7 +1022,7 @@ fetch('pokemon_math_questions.csv')
   })
   .catch(error => {
     console.error("Failed to load CSV:", error);
-    questionPool = [{ a: 1, b: 1, answer: "2", wrong1: "4", wrong2: "1", type: "addition", difficulty: 0 }];
+    questionPool = [{ question: "1 + 1 =", answer: "2", wrong1: "4", wrong2: "1", type: "addition", difficulty: 0 }];
     questionsReady = true;
     maybeShowOverlay();
   });
@@ -1278,7 +1278,7 @@ loadPokemonSprite(pokemon, img => {
 
   const filtered = questionPool.filter(q => typeSetting.includes(q.type) && difficultySetting.includes(q.difficulty));
   const questionObj = filtered[Math.floor(Math.random() * filtered.length)] || {
-    a: 2, b: 2, type: 'addition', answer: '4', wrong1: '3', wrong2: '5'
+    question: '2 + 2 =', type: 'addition', answer: '4', wrong1: '3', wrong2: '5'
   };
 
   let operator = '+';
@@ -1655,7 +1655,7 @@ function askBossQuestionWithTimer(questionBox, answerBox, timerDisplay) {
   return new Promise(resolve => {
     const filtered = questionPool.filter(q => typeSetting.includes(q.type) && difficultySetting.includes(q.difficulty));
     const questionObj = filtered[Math.floor(Math.random() * filtered.length)] || {
-      a: 2, b: 2, type: 'addition', answer: '4', wrong1: '3', wrong2: '5'
+      question: '2 + 2 =', type: 'addition', answer: '4', wrong1: '3', wrong2: '5'
     };
 
     let operator = '+';
