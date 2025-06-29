@@ -264,8 +264,11 @@
       }
 
       localStorage.setItem('trainer', selectedCharacter.id);
-      localStorage.setItem('questionTypes', JSON.stringify(selectedTypes.map(e => e.textContent)));
-      localStorage.setItem('difficultyLevels', JSON.stringify(selectedLevels.map(e => e.textContent)));
+      localStorage.setItem('questionTypes', JSON.stringify(selectedTypes.map(e => e.textContent.trim().toLowerCase())));
+      localStorage.setItem('difficultyLevels', JSON.stringify(selectedLevels.map(e => {
+  const match = e.textContent.match(/\d+/);
+  return match ? parseInt(match[0], 10) : 0;
+})));
       localStorage.setItem('answerType', selectedAnswer.textContent);
       localStorage.setItem('bossTimer', selectedBossTimer.textContent);
       localStorage.setItem('starter', selectedStarter);
