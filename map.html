@@ -1006,16 +1006,15 @@ fetch('pokemon_math_questions.csv')
   .then(response => response.text())
   .then(csv => {
     questionPool = csv.trim().split('\n').slice(1).map(line => {
-      const [a, b, answer, wrong1, wrong2, difficulty, type] = line.split(',');
+      const [question, answer, wrong1, wrong2, difficulty, type] = line.split(',');
       return {
-        a: Number(a.trim()),
-        b: Number(b.trim()),
-        answer: answer.trim(),
-        wrong1: wrong1.trim(),
-        wrong2: wrong2.trim(),
-        type: type.trim().toLowerCase(),
-        difficulty: parseInt(difficulty.trim(), 10)
-      };
+  question: question.trim(),
+  answer: answer.trim(),
+  wrong1: wrong1.trim(),
+  wrong2: wrong2.trim(),
+  type: type.trim().toLowerCase(),
+  difficulty: parseInt(difficulty.trim(), 10)
+};
     });
 
     questionsReady = true;
@@ -1287,7 +1286,7 @@ loadPokemonSprite(pokemon, img => {
   else if (questionObj.type === 'multiplication') operator = '×';
   else if (questionObj.type === 'division') operator = '÷';
 
-  const questionStr = `${questionObj.a} ${operator} ${questionObj.b}`;
+  const questionStr = questionObj.question;
   questionBox.innerHTML = `A wild <strong>${pokemon}</strong> appears!<br>Solve to catch it now!<br><br><strong>${questionStr}</strong>`;
   questionBox.style.display = 'block';
   answerBox.innerHTML = '';
@@ -1664,7 +1663,7 @@ function askBossQuestionWithTimer(questionBox, answerBox, timerDisplay) {
     else if (questionObj.type === 'multiplication') operator = '×';
     else if (questionObj.type === 'division') operator = '÷';
 
-    const questionStr = `${questionObj.a} ${operator} ${questionObj.b}`;
+    const questionStr = questionObj.question;
     document.getElementById('bossQuestionText').innerHTML = `Solve to power up your attack!<br><br><strong>${questionStr}</strong>`;
     questionBox.style.display = 'block';
     answerBox.innerHTML = '';

@@ -151,6 +151,9 @@
         <div class="option">Subtraction</div>
         <div class="option">Multiplication</div>
         <div class="option">Division</div>
+        <div class="option">BODMAS</div>
+        <div class="option">Algebra</div>
+
       </div>
     </div>
 
@@ -342,6 +345,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ['Year 2', 'Year 3', 'Year 4', 'Year 5', 'Year 6'].includes(level)
   );
 
+  const isYear5Plus = selectedLevels.some(level =>
+    ['Year 5', 'Year 6'].includes(level)
+  );
+
   const questionTypeOptions = document.querySelectorAll('#questionTypes .option');
 
   questionTypeOptions.forEach(opt => {
@@ -349,16 +356,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (['Multiplication', 'Division'].includes(text)) {
       if (isYear2Plus) {
-        // Enable
         opt.classList.remove('disabled');
       } else {
-        // Disable and unselect
+        opt.classList.add('disabled');
+        opt.classList.remove('selected');
+      }
+    } else if (['BODMAS', 'Algebra'].includes(text)) {
+      if (isYear5Plus) {
+        opt.classList.remove('disabled');
+      } else {
         opt.classList.add('disabled');
         opt.classList.remove('selected');
       }
     }
   });
 }
+
 </script>
 </body>
 </html>
