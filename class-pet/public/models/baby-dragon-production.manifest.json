@@ -1,0 +1,220 @@
+{
+  "pet_id": "meshy_baby_dragon",
+  "model_file": "/models/baby-dragon-production.glb",
+  "scale": 1.0,
+  "default_rotation": [0.0, 0.0, 0.0],
+  "default_position_offset": [0.0, -1.305, 0.0],
+  "ground_height": -1.305,
+  "ground_offset": 0.0,
+  "foot_contact_offset": 0.000052907,
+  "default_idle_action": "Pet_Idle_Breathing_Loop",
+  "recommended_crossfade_duration": 0.3,
+  "action_mapping": {
+    "idle": {
+      "action": "Pet_Idle_Breathing_Loop",
+      "loop": true,
+      "duration": 5.0,
+      "crossfade_duration": 0.3,
+      "ambient_weight": 45,
+      "minimum_cooldown": 0,
+      "rare": false,
+      "status": "accepted"
+    },
+    "curious_idle": {
+      "action": "Pet_Idle_Curious_Loop",
+      "loop": true,
+      "duration": 5.0,
+      "crossfade_duration": 0.35,
+      "ambient_weight": 20,
+      "minimum_cooldown": 0,
+      "rare": false,
+      "status": "accepted"
+    },
+    "idle_head_look": {
+      "action": "Pet_Idle_Head_Look",
+      "loop": false,
+      "duration": 5.0,
+      "crossfade_duration": 0.3,
+      "ambient_weight": 10,
+      "minimum_cooldown": 25,
+      "rare": false,
+      "status": "accepted"
+    },
+    "idle_inspect_paw": {
+      "action": "Pet_Idle_Inspect_Paw",
+      "loop": false,
+      "duration": 5.0,
+      "crossfade_duration": 0.3,
+      "ambient_weight": 7,
+      "minimum_cooldown": 35,
+      "rare": false,
+      "status": "accepted"
+    },
+    "idle_sit_down": {
+      "action": "Pet_Idle_Sit_Down",
+      "loop": false,
+      "duration": 6.0,
+      "crossfade_duration": 0.35,
+      "ambient_weight": 5,
+      "minimum_cooldown": 60,
+      "rare": false,
+      "status": "review"
+    },
+    "idle_chase_tail": {
+      "action": "Pet_Idle_Chase_Tail",
+      "loop": false,
+      "duration": 6.0,
+      "crossfade_duration": 0.3,
+      "ambient_weight": 4,
+      "minimum_cooldown": 60,
+      "rare": false,
+      "status": "review"
+    },
+    "idle_eye_squint": {
+      "action": "Pet_Idle_Eye_Squint",
+      "loop": false,
+      "duration": 2.0,
+      "crossfade_duration": 0.2,
+      "ambient_weight": 4,
+      "minimum_cooldown": 25,
+      "rare": false,
+      "status": "review"
+    },
+    "idle_failed_fire": {
+      "action": "Pet_Idle_Failed_Fire",
+      "loop": false,
+      "duration": 5.0,
+      "crossfade_duration": 0.3,
+      "ambient_weight": 3,
+      "minimum_cooldown": 90,
+      "rare": false,
+      "status": "accepted"
+    },
+    "idle_failed_fire_sneeze": {
+      "action": "Pet_Idle_Failed_Fire_Sneeze",
+      "loop": false,
+      "duration": 6.25,
+      "crossfade_duration": 0.3,
+      "ambient_weight": 1.5,
+      "minimum_cooldown": 150,
+      "rare": true,
+      "status": "accepted"
+    },
+    "idle_sneeze_fall": {
+      "action": "Pet_Idle_Sneeze_Fall",
+      "loop": false,
+      "duration": 5.0,
+      "crossfade_duration": 0.25,
+      "ambient_weight": 0.5,
+      "minimum_cooldown": 180,
+      "rare": true,
+      "recovery_action": "Pet_Idle_Recover_From_Fall",
+      "status": "review"
+    },
+    "idle_recover_from_fall": {
+      "action": "Pet_Idle_Recover_From_Fall",
+      "loop": false,
+      "duration": 5.0,
+      "crossfade_duration": 0.25,
+      "ambient_weight": 0,
+      "minimum_cooldown": 0,
+      "rare": false,
+      "status": "accepted"
+    },
+    "feed": {"action": "Pet_Eat_Talk", "loop": false, "status": "accepted"},
+    "play": {"action": "Pet_Happy_Bounce", "loop": false, "status": "accepted"},
+    "greet": {"action": "Pet_Happy_Bounce", "loop": false, "status": "accepted"},
+    "bounce": {"action": "Pet_Happy_Bounce", "loop": false, "status": "accepted"},
+    "spin": {"action": "Pet_Happy_Bounce", "loop": false, "status": "accepted"},
+    "rest": {"action": "Pet_Sleep_Loop", "loop": false, "status": "accepted"},
+    "sneeze": {"action": "Pet_Sneeze_Spark_Reaction", "loop": false, "status": "accepted"},
+    "pet": {"action": "Pet_Idle_Eye_Squint", "loop": false, "status": "review"},
+    "hungry": {"action": "Pet_Idle_Inspect_Paw", "loop": false, "status": "review"},
+    "soccer_kick": {"action": "Pet_Soccer_Kick_Left_Test", "loop": false, "status": "review"},
+    "jumping_jacks": {"action": "Pet_Jumping_Jacks_Test", "loop": false, "status": "review"},
+    "wing_flutter": {"action": "Pet_Tiny_Wing_Flutter", "loop": false, "status": "accepted"},
+    "dance": {"action": "Pet_Tiny_Wing_Flutter", "loop": false, "status": "accepted"},
+    "goodbye": {"action": "Pet_Tiny_Wing_Flutter", "loop": false, "status": "accepted"},
+    "wait": {"action": "Pet_Idle_Breathing_Loop", "loop": true, "status": "accepted"},
+    "look_around": {"action": "Pet_Idle_Curious_Loop", "loop": true, "status": "accepted"},
+    "press-up": {"action": "Pet_Happy_Bounce", "loop": false, "status": "accepted"},
+    "run": {"action": "Pet_Happy_Bounce", "loop": false, "status": "accepted"},
+    "arm_gesture": {"action": "Pet_Arm_Gesture_Test", "loop": false, "status": "review"}
+  },
+  "animations": [
+    {"name": "Pet_Idle_Breathing_Loop", "loop": true},
+    {"name": "Pet_Idle_Curious_Loop", "loop": true},
+    {"name": "Pet_Idle_Inspect_Paw", "loop": false},
+    {"name": "Pet_Idle_Chase_Tail", "loop": false},
+    {"name": "Pet_Idle_Sit_Down", "loop": false},
+    {"name": "Pet_Idle_Head_Look", "loop": false},
+    {"name": "Pet_Idle_Eye_Squint", "loop": false},
+    {"name": "Pet_Idle_Failed_Fire", "loop": false},
+    {"name": "Pet_Idle_Failed_Fire_Sneeze", "loop": false},
+    {"name": "Pet_Idle_Sneeze_Fall", "loop": false},
+    {"name": "Pet_Idle_Recover_From_Fall", "loop": false},
+    {"name": "Pet_Happy_Bounce", "loop": false},
+    {"name": "Pet_Eat_Talk", "loop": false},
+    {"name": "Pet_Sleep_Loop", "loop": true},
+    {"name": "Pet_Sneeze_Spark_Reaction", "loop": false},
+    {"name": "Pet_Tiny_Wing_Flutter", "loop": false},
+    {"name": "Pet_Arm_Gesture_Test", "loop": false},
+    {"name": "Pet_Soccer_Kick_Left_Test", "loop": false},
+    {"name": "Pet_Jumping_Jacks_Test", "loop": false}
+  ],
+  "fx_events": [
+    {
+      "action": "Pet_Sneeze_Spark_Reaction",
+      "event": "sneeze_spark_smoke",
+      "marker": "FX_SneezeSpark_Emitter",
+      "trigger_frame": 43,
+      "trigger_normalized_time": 0.4777777777777778
+    },
+    {
+      "action": "Pet_Idle_Failed_Fire",
+      "event": "tiny_failed_fire_spark",
+      "marker": "FX_SneezeSpark_Emitter",
+      "trigger_frame": 62,
+      "trigger_normalized_time": 0.5166666666666667
+    },
+    {
+      "action": "Pet_Idle_Failed_Fire_Sneeze",
+      "event": "failed_fire_spark",
+      "marker": "FX_SneezeSpark_Emitter",
+      "trigger_frame": 52,
+      "trigger_normalized_time": 0.3466666666666667
+    },
+    {
+      "action": "Pet_Idle_Failed_Fire_Sneeze",
+      "event": "sneeze_spark_smoke",
+      "marker": "FX_SneezeSpark_Emitter",
+      "trigger_frame": 108,
+      "trigger_normalized_time": 0.72
+    },
+    {
+      "action": "Pet_Idle_Sneeze_Fall",
+      "event": "sneeze_spark_smoke",
+      "marker": "FX_SneezeSpark_Emitter",
+      "trigger_frame": 62,
+      "trigger_normalized_time": 0.5166666666666667
+    }
+  ],
+  "facial_capabilities": {
+    "true_jaw": "FAIL",
+    "blink": "FAIL",
+    "eye_squint_fallback": "REVIEW",
+    "shape_keys": "NONE",
+    "lower_face_bone_acting": "LIMITED"
+  },
+  "known_limitations": [
+    "No true hinged jaw",
+    "No eyelid or independent eye controls",
+    "Pet_Idle_Eye_Squint is a head and lower-face acting fallback, not a true blink",
+    "Sit-down is a conservative partial sit",
+    "Sneeze fall needs visual review for close ground contact around the head and near wing",
+    "GLB export reduces vertices with more than four joint influences to the strongest four"
+  ],
+  "bone_role_map_file": "blender/reports/meshy_baby_dragon_bone_role_map.json",
+  "exported_glb_version": "meshy_personality_idles_01",
+  "exported_glb_file": "blender/exports/meshy_baby_dragon_personality_idles_01.glb"
+}

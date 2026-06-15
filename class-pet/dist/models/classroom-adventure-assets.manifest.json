@@ -1,0 +1,197 @@
+{
+  "version": "classroom_adventure_assets_01",
+  "coordinate_system": {
+    "vertical_axis": "y",
+    "camera_depth_axis": "z",
+    "left_right_axis": "x",
+    "ground_y": -1.305
+  },
+  "assets": {
+    "moon_nest": {
+      "asset_id": "moon_nest",
+      "name": "Empty Moon Nest",
+      "model_file": "/models/moon-nest.glb",
+      "source_model_path": "/Users/patrickrooney/Downloads/Meshy_AI_Magical_Moon_Nest_0614105549_image-to-3d-texture.blend",
+      "object_names": ["MoonNest", "Mesh_0", "MoonNest_EggAnchor", "MoonNest_UnicornAnchor", "MoonNest_FXAnchor"],
+      "scale": 0.72,
+      "position": [1.72, -1.305, -0.18],
+      "rotation": [0, -0.24, 0],
+      "origin": "bottom_center",
+      "anchor_point": "MoonNest_EggAnchor",
+      "environment_slot": "egg_area",
+      "persistence_key": "environmentProgress.slots.egg",
+      "available_states": ["empty", "holding_egg", "hatched"],
+      "status": "review",
+      "fallback": "CSS nest placeholder"
+    },
+    "moon_egg": {
+      "asset_id": "moon_egg",
+      "name": "Magical Moon Egg",
+      "model_file": "/models/moon-egg.glb",
+      "source_model_path": "/Users/patrickrooney/Downloads/Meshy_AI_Magical_Moon_Egg_0614105607_image-to-3d-texture.blend",
+      "object_names": [
+        "MoonEgg",
+        "Mesh_0",
+        "MoonEgg_Crack_Stage10",
+        "MoonEgg_Crack_Stage15_A",
+        "MoonEgg_Crack_Stage15_B",
+        "MoonEgg_Ready_Glow",
+        "MoonEgg_Shell_01",
+        "MoonEgg_Shell_02",
+        "MoonEgg_Shell_03"
+      ],
+      "scale": 1.25,
+      "position": [1.72, -0.94, -0.18],
+      "rotation": [0, -0.16, 0.04],
+      "origin": "bottom_center",
+      "anchor_point": "MoonNest_EggAnchor",
+      "environment_slot": "egg_area",
+      "persistence_key": "environmentProgress.moonEggStage",
+      "animations": ["MoonEgg_Hatch"],
+      "available_states": ["MoonEgg_Intact", "MoonEgg_Stage05", "MoonEgg_Stage10", "MoonEgg_Stage15", "MoonEgg_Hatching", "MoonEgg_Hatched"],
+      "stage_visibility": {
+        "0": {
+          "show": ["Mesh_0"],
+          "hide": ["MoonEgg_Crack_Stage10", "MoonEgg_Crack_Stage15_A", "MoonEgg_Crack_Stage15_B", "MoonEgg_Ready_Glow", "MoonEgg_Shell_01", "MoonEgg_Shell_02", "MoonEgg_Shell_03"]
+        },
+        "1": {
+          "show": ["Mesh_0"],
+          "hide": ["MoonEgg_Crack_Stage10", "MoonEgg_Crack_Stage15_A", "MoonEgg_Crack_Stage15_B", "MoonEgg_Ready_Glow", "MoonEgg_Shell_01", "MoonEgg_Shell_02", "MoonEgg_Shell_03"]
+        },
+        "2": {
+          "show": ["Mesh_0", "MoonEgg_Crack_Stage10"],
+          "hide": ["MoonEgg_Crack_Stage15_A", "MoonEgg_Crack_Stage15_B", "MoonEgg_Ready_Glow", "MoonEgg_Shell_01", "MoonEgg_Shell_02", "MoonEgg_Shell_03"]
+        },
+        "3": {
+          "show": ["Mesh_0", "MoonEgg_Crack_Stage10", "MoonEgg_Crack_Stage15_A", "MoonEgg_Crack_Stage15_B"],
+          "hide": ["MoonEgg_Ready_Glow", "MoonEgg_Shell_01", "MoonEgg_Shell_02", "MoonEgg_Shell_03"]
+        },
+        "4": {
+          "show": ["Mesh_0", "MoonEgg_Crack_Stage10", "MoonEgg_Crack_Stage15_A", "MoonEgg_Crack_Stage15_B", "MoonEgg_Ready_Glow"],
+          "hide": ["MoonEgg_Shell_01", "MoonEgg_Shell_02", "MoonEgg_Shell_03"]
+        },
+        "5": {
+          "show": [],
+          "hide": ["Mesh_0", "MoonEgg_Crack_Stage10", "MoonEgg_Crack_Stage15_A", "MoonEgg_Crack_Stage15_B", "MoonEgg_Ready_Glow", "MoonEgg_Shell_01", "MoonEgg_Shell_02", "MoonEgg_Shell_03"]
+        }
+      },
+      "event_timing": {
+        "MoonEgg_Hatch": {
+          "duration_seconds": 10,
+          "events": [
+            { "event": "egg_glow_rise", "frame": 45, "normalizedTime": 0.1875 },
+            { "event": "egg_crack_burst", "frame": 140, "normalizedTime": 0.5833333333 },
+            { "event": "moon_unicorn_reveal", "frame": 210, "normalizedTime": 0.875 }
+          ]
+        }
+      },
+      "status": "review",
+      "fallback": "CSS moon egg placeholder"
+    },
+    "moon_unicorn_01": {
+      "asset_id": "moon_unicorn_01",
+      "name": "Moon Unicorn",
+      "model_file": "/models/moon-unicorn.glb",
+      "source_model_path": "/Users/patrickrooney/Downloads/Meshy_AI_Moon_Unicorn_output (1).glb",
+      "object_names": ["MoonUnicorn", "UniRigArmature", "Mesh_0.001"],
+      "scale": 0.95,
+      "position": [1.72, -1.305, -0.10],
+      "rotation": [0, -0.36, 0],
+      "origin": "ground_contact_center",
+      "anchor_point": "MoonNest_UnicornAnchor",
+      "environment_slot": "companion",
+      "persistence_key": "environmentProgress.slots.companion",
+      "unlocked_requirement": "unlockedItems.includes('moon_unicorn_01')",
+      "animations": ["MoonUnicorn_Idle_Loop"],
+      "idle_action": "MoonUnicorn_Idle_Loop",
+      "glow": { "enabled": true, "color": "#b8d7ff", "intensity": 0.35 },
+      "status": "review",
+      "fallback": "companion icon"
+    },
+    "magic_berry": {
+      "asset_id": "magic_berry",
+      "name": "Magical Berry",
+      "model_file": "/models/magic-berry.glb",
+      "source_model_path": "/Users/patrickrooney/Downloads/Meshy_AI_Magical_berry_for_a_c_0614111531_texture.glb",
+      "object_names": ["MagicBerry", "MagicBerry_Full", "MagicBerry_Bite1", "MagicBerry_Bite2", "MagicBerry_Bite3", "MagicBerry_Core"],
+      "scale": 1.0,
+      "position": [-0.3, -0.4, 0.72],
+      "rotation": [0.1, -0.15, 0.18],
+      "origin": "fruit_center",
+      "anchor_point": "feed_paw_to_mouth_path",
+      "available_states": ["MagicBerry_Full", "MagicBerry_Bite1", "MagicBerry_Bite2", "MagicBerry_Bite3", "MagicBerry_Core"],
+      "event_timing": {
+        "Pet_Eat_Talk": {
+          "duration_frames": 72,
+          "events": [
+            { "event": "berry_show_full", "frame": 1, "normalizedTime": 0.0138888889, "state": "MagicBerry_Full" },
+            { "event": "berry_bite_1", "frame": 18, "normalizedTime": 0.25, "state": "MagicBerry_Bite1" },
+            { "event": "berry_bite_2", "frame": 34, "normalizedTime": 0.4722222222, "state": "MagicBerry_Bite2" },
+            { "event": "berry_bite_3", "frame": 50, "normalizedTime": 0.6944444444, "state": "MagicBerry_Bite3" },
+            { "event": "berry_hide", "frame": 64, "normalizedTime": 0.8888888889, "state": "MagicBerry_Core" }
+          ]
+        }
+      },
+      "status": "review",
+      "fallback": "no berry prop"
+    },
+    "fantasy_soccer_ball": {
+      "asset_id": "fantasy_soccer_ball",
+      "name": "Fantasy Soccer Ball",
+      "model_file": "/models/fantasy-soccer-ball.glb",
+      "source_model_path": "/Users/patrickrooney/Downloads/Meshy_AI_Soccer_Ball_fantasy__0615092241_texture.blend",
+      "object_names": ["FantasySoccerBall"],
+      "scale": 0.92,
+      "position": [0.24, -1.19, 0.62],
+      "rotation": [0, 0, 0],
+      "origin": "center",
+      "anchor_point": "play_ball_path",
+      "available_states": ["FantasySoccerBall"],
+      "effects": {
+        "SoccerPass3": {
+          "implementation": "runtime_position_rotation_tween",
+          "passes": 3,
+          "tapToReturn": true,
+          "finishAnimation": "Pet_Jumping_Jacks_Test"
+        }
+      },
+      "status": "review",
+      "fallback": "no ball prop"
+    },
+    "magic_moon_lantern": {
+      "asset_id": "magic_moon_lantern",
+      "name": "Magical Moon Lantern",
+      "model_file": "/models/magic-lantern.glb",
+      "source_model_path": "/Users/patrickrooney/Downloads/magical+lantern+3d+model.glb",
+      "object_names": ["MagicLantern", "tripo_node_3d1faa70-0ee4-4a84-b511-4beb4e7eca20", "MagicLantern_Glow"],
+      "scale": 1.9,
+      "position": [-1.86, -1.08, 0.72],
+      "rotation": [0, 0.2, 0],
+      "origin": "bottom_center",
+      "anchor_point": "lantern_habitat_slot",
+      "environment_slot": "lantern",
+      "persistence_key": "environmentProgress.slots.lantern",
+      "available_states": ["MagicLantern_Off", "MagicLantern_On"],
+      "effects": {
+        "MagicLantern_Glow_Loop": {
+          "implementation": "runtime_emissive_and_point_light_flicker",
+          "baseIntensity": 0.9,
+          "variation": 0.1,
+          "pulseEverySeconds": [7, 14],
+          "childSafe": true
+        }
+      },
+      "store": {
+        "id": "magic_moon_lantern",
+        "category": "Habitat Decoration",
+        "currency": "dragonCoins",
+        "cost": 25,
+        "purchaseType": "permanent",
+        "randomReward": false,
+        "description": "A softly glowing lantern that makes the dragon’s habitat feel warm and magical."
+      },
+      "status": "accepted",
+      "fallback": "lantern icon"
+    }
+  }
+}
