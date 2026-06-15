@@ -557,244 +557,6 @@ button:hover {
   transform: scaleX(-1);
 }
 
-
-@media (max-width: 800px) {
-  /* Fixed top bar with exit/mute */
-  #muteBtn, #exitGameButton {
-    position: fixed;
-    top: 5px;
-    font-size: 12px;
-    padding: 5px 10px;
-    border-radius: 8px;
-    z-index: 20;
-  }
-  #muteBtn {
-    left: 5px;
-  }
-  #exitGameButton {
-    right: 5px;
-  }
-
-  /* Question box fixed below top buttons */
-  #questionBox, #bossQuestionBox {
-    position: fixed;
-    top: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 95%;
-    max-width: 95%;
-    z-index: 10;
-    box-sizing: border-box;
-    padding: 10px;
-    background: white;
-    border-bottom: 2px solid #333;
-    text-align: center;
-  }
-
-  /* Badges and starter on same row under questionBox */
-  #badges {
-  position: fixed;
-  top: 190px;
-  left: 60%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 5px;
-  z-index: 11;
-  width: auto;
-  height: auto;
-  background: none;
-  justify-content: center;
-  align-items: center;
-}
-  #badges img {
-    width: 32px;
-    height: 32px;
-    filter: grayscale(100%);
-    opacity: 0.5;
-  }
-  #badges img.unlocked {
-    filter: none;
-    opacity: 1;
-  }
-
-  #starter {
-    position: fixed;
-    top: 190px;
-    left: 10px;
-    width: 50px;
-    z-index: 11;
-  }
-
-  /* Party box directly under starter */
-  #partySlots {
-    position: fixed;
-    top: 250px;
-    left: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    z-index: 11;
-  }
-  .party-slot {
-    width: 48px;
-    height: 48px;
-  }
-
-  /* Answer box fixed neatly at bottom with margin */
-  #answerBox, #bossAnswerBox {
-    position: fixed;
-  bottom: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 600px;
-  box-sizing: border-box;
-  padding: 0;
-  background: none;
-  border: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: center;
-  z-index: 10;
-  }
-  #answerBox input[type=text], #bossAnswerBox input[type=text] {
-    width: 100%;
-    max-width: none;
-    box-sizing: border-box;
-  }
-
- .answer-option {
-  font-size: 20px;
-  padding: 20px 40px;
-  min-width: 200px;
-  max-width: 400px;
-  flex: 1 1 auto;
-  text-align: center;
-  margin: 10px;
-  box-sizing: border-box;
-  border: 4px solid red;
-  border-radius: 12px;
-  background: white;
-  box-shadow: 2px 2px 0 black;
-  cursor: pointer;
-}
-
-
-  @media (orientation: portrait) {
-    #answerBox, #bossAnswerBox {
-      flex-direction: column;
-      align-items: center;
-    }
-    .answer-option {
-      width: 80%;
-      max-width: none;
-    }
-  }
-
-  @media (orientation: landscape) {
-  #badges {
-    position: fixed;
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 5px;
-    z-index: 20;
-    width: auto;
-    height: auto;
-    background: none;
-    justify-content: center;
-    align-items: center;
-  }
-  #badges img {
-    width: 32px;
-    height: 32px;
-  }
-  #questionBox {
-  font-size: 18px;       /* from 20px */
-  padding: 8px;          /* from 10px */
-}
-.answer-option {
-    width: 28vw;
-    min-width: unset;
-    max-width: unset;
-    font-size: 16px;
-    padding: 12px 16px;
-  }
-}
-
-}
-
-@media (max-width: 800px) and (orientation: landscape) {
-  #answerOptions {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 2px;        /* smaller gap to allow wider buttons */
-    padding: 0 2px;
-  }
-
-  .answer-option {
-    flex: 0 1 34%;   /* wider than before */
-    width: 34%;
-    min-width: unset;
-    max-width: unset;
-    font-size: 17px;  /* a little bigger text */
-    padding: 18px 75px;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-    /* Make question box narrower and shifted right to leave space for party list */
-  #questionBox {
-    left: calc(50% + 30px);
-    transform: translateX(-50%);
-    width: 70%;
-    max-width: 600px;
-    font-size: 17px;
-    padding: 8px;
-    box-sizing: border-box;
-  }
-
-  /* Position the party list starting just under the mute button */
-  #party {
-    position: fixed !important;
-    top: 50px !important;
-    left: 10px !important;
-    z-index: 11 !important;
-    width: 80px !important;
-  }
-
-  #partySlots {
-    position: fixed;
-    top: 120px;
-    left: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    z-index: 11;
-  }
-  .party-slot {
-    width: 32px;
-    height: 32px;
-  }
-  #starter {
-    position: fixed;
-    top: 50px;
-    left: 10px;
-    width: 50px;
-    z-index: 11;
-  }
-}
-
-
-
-
-
-
   </style>
 </head>
 <body>
@@ -827,7 +589,7 @@ button:hover {
 </div>
 
 <div style="position: fixed; bottom: 20px; right: 20px; z-index: 10;">
-  <button id="exitGameButton" onclick="exitGame()">Exit Game</button>
+  <button onclick="exitGame()">Exit Game</button>
 </div>
 <!-- Start Overlay -->
 <div id="startOverlay">
@@ -1146,13 +908,9 @@ overlay.addEventListener('touchstart', startGame);
 function startGame() {
   overlay.style.display = 'none';
 
-  const unlockAudio = [bgMusic, starterCry, bossCry, evolveStart, evolveEnd, envSound, envPokemon];
-  unlockAudio.forEach(audio => {
-    audio.play().catch(() => {});
-    audio.pause();
-    audio.currentTime = 0;
-  });
-  bgMusic.play().catch(err => console.log('Music play error:', err));
+  // Start music (ensure user-initiated)
+  const music = document.getElementById('bgmusic');
+  music.play().catch(err => console.log('Music play error:', err));
 
   // Initialize game state
   initializeGame();
@@ -1230,12 +988,6 @@ bgMusic.id = 'bgmusic';
 bgMusic.loop = true;
 bgMusic.src = currentTheme.music || 'default_theme.mp3';  // Fallback if missing
 document.body.appendChild(bgMusic);
-const starterCry = new Audio();
-const bossCry = new Audio();
-const evolveStart = new Audio('evolve.mp3');
-const evolveEnd = new Audio('evolve_finish.mp3');
-const envSound = new Audio('thunder.mp3');
-const envPokemon = new Audio('mew.mp3');
 
     const typeSetting = JSON.parse(localStorage.getItem('questionTypes') || '["addition"]');
 const difficultySetting = JSON.parse(localStorage.getItem('difficultyLevels') || '[0]');
@@ -1281,7 +1033,7 @@ fetch('pokemon_math_questions.csv')
 function initializeGame() {
   // Reset all level state
   trainerX = 0;
-  stopSpacing = (canvas.width-80) / 6;
+  stopSpacing = canvas.width / 6;
   stops = 5;
   currentStop = 0;
   questionShownForStop = false;
@@ -1302,9 +1054,8 @@ starterImg.onerror = function () {
 starterImg.src = `${starterName}.gif`;
 starterImg.addEventListener('click', () => {
   if (localStorage.getItem('muted') !== 'true') {
-    starterCry.src = `${starterName}.mp3`; 
-    starterCry.play().catch(() => {});
-
+    const audio = new Audio(`${starterName}.mp3`);
+    audio.play();
   }
 });
 
@@ -1342,25 +1093,16 @@ const badgeContainer = document.getElementById('badges');
 const radius = 60;
 const centerX = 75;
 const centerY = 75;
-const isMobile = window.innerWidth <= 800;
 
 allBadges.forEach((badge, index) => {
+  const angle = (2 * Math.PI * index) / allBadges.length;
+  const x = centerX + radius * Math.cos(angle);
+  const y = centerY + radius * Math.sin(angle);
+
   const img = document.createElement('img');
   img.src = badge;
-
-  if (!isMobile) {
-    // Desktop circle positioning
-    const angle = (2 * Math.PI * index) / allBadges.length;
-    const x = centerX + radius * Math.cos(angle);
-    const y = centerY + radius * Math.sin(angle);
-
-    img.style.position = 'absolute';
-    img.style.left = `${x}px`;
-    img.style.top = `${y}px`;
-  } else {
-    // Mobile: no absolute positioning, let flexbox handle it
-    img.style.position = 'static';
-  }
+  img.style.left = `${x}px`;
+  img.style.top = `${y}px`;
 
   if (index < badgeIndex) img.classList.add('unlocked');
   badgeContainer.appendChild(img);
@@ -1406,7 +1148,6 @@ pokemonsOnPath.forEach(name => {
     let questionShownForStop = false;
     let trainerX = 0;
     let bossBattleStarted = false;
-    let trainerProgress = 0;
 
 
     const objectTypes = currentTheme.objects;
@@ -1431,7 +1172,7 @@ pokemonsOnPath.forEach(name => {
         else foregroundObjects.push(obj);
       }
 
-      stopSpacing = (canvas.width-80) / (stops + 1);
+      stopSpacing = canvas.width / (stops + 1);
       const grassY = canvas.height / 2 - 40;
 
       for (let i = 0; i < stops; i++) {
@@ -1460,26 +1201,12 @@ function generateClouds() {
   }
 }
     function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const grassY = canvas.height / 2;
-
-  // Update trainer vertical position
-  trainerImg.style.top = `${grassY - 48}px`;
-  trainerX = trainerProgress * canvas.width;
-  // Update trainer horizontal position (using trainerX)
-  trainerImg.style.left = `${trainerX}px`;
-
-  // Also update any visible wild Pokémon sprite
-  const pokemonSprite = document.getElementById('pokemonSprite');
-  if (pokemonSprite.style.display !== 'none') {
-    pokemonSprite.style.top = `${grassY - 40}px`;
-    pokemonSprite.style.left = `${trainerX + 60}px`;
-  }
-
-  generateObjects();
-}
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const grassY = canvas.height / 2;
+      trainerImg.style.top = `${grassY - 48}px`;
+      generateObjects();
+    }
 
     window.addEventListener('resize', () => {
       resizeCanvas();
@@ -1725,9 +1452,8 @@ bossSprite.style.opacity = '0';
 
 // Play boss cry if not muted
 if (!muted) {
-  bossCry.src = `${currentTheme.boss.pokemon}.mp3`; 
+  const bossCry = new Audio(`${currentTheme.boss.pokemon}.mp3`);
   bossCry.play().catch(() => {});
-
 }
 
 // Fade in boss sprite
@@ -1828,9 +1554,8 @@ window.addEventListener('resize', positionBossHealthBar);
     answerBox.style.display = 'none';
 
     if (currentPokemon === starterName && !muted) {
-      starterCry.src = `${currentPokemon}.mp3`;
-      starterCry.play().catch(() => {});
-
+      const cryAudio = new Audio(`${currentPokemon}.mp3`);
+      cryAudio.play();
     }
 
     playerSprite.classList.add('attack-animation');
@@ -2100,7 +1825,6 @@ function animate() {
     if (trainerX < targetX) {
       const WALK_SPEED = 2;
       trainerX = Math.min(trainerX + WALK_SPEED, targetX);
-      trainerProgress = trainerX / canvas.width;
     } else if (!questionShownForStop) {
       questionShownForStop = true;
       askQuestion(pokemonsOnPath[currentStop]);
@@ -2211,22 +1935,22 @@ async function triggerEvolution(oldForm, newForm) {
 
     // Play old cry first if not muted
     if (!muted) {
-  starterCry.src = `${oldForm}.mp3`;
-  starterCry.play().catch(() => {
-    playEvolutionSounds();
-  });
-  starterCry.onended = () => playEvolutionSounds();
-} else {
-  playEvolutionSounds();
-}
+      const oldCry = new Audio(`${oldForm}.mp3`);
+      oldCry.play();
 
+      oldCry.onended = () => playEvolutionSounds();
+    } else {
+      // Skip sound, just run evolution
+      playEvolutionSounds();
+    }
 
     function playEvolutionSounds() {
       let flashing = true;
        let evolveSound = null;  
 
       if (!muted) {
-        evolveStart.play().catch(() => {});
+        evolveSound = new Audio('evolve.mp3');
+        evolveSound.play();
 
       }
 
@@ -2266,11 +1990,12 @@ async function triggerEvolution(oldForm, newForm) {
         text.innerText = `Congratulations! Your ${pokemon} evolved into ${evolved}!`;
 
         if (!muted) {
-          starterCry.src = `${evolved}.mp3`;
-          starterCry.play().catch(() => {});
+          const newCry = new Audio(`${evolved}.mp3`);
+          newCry.play();
 
-          starterCry.onended = () => {
-            evolveEnd.play().catch(() => {});
+          newCry.onended = () => {
+            const finishSound = new Audio('evolve_finish.mp3');
+            finishSound.play();
           };
         }
 
