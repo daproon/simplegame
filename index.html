@@ -3,19 +3,27 @@
 <head>
   <meta charset="UTF-8" />  <link rel="icon" type="image/png" href="favicon_mrsrooney.png">  <title>Mrs Rooney’s Game Time!</title>
   <style>
-    body {
-      font-family: 'Comic Sans MS', sans-serif;
-      background: linear-gradient(to top, #fff3e0, #80deea);
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
+html {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Comic Sans MS", sans-serif;
+  background: linear-gradient(to top, #fff3e0, #80deea);
+  margin: 0;
+  padding: 30px 15px;
+  min-height: 100vh;
+  box-sizing: border-box;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+}
 
     h1 {
       font-size: 3em;
