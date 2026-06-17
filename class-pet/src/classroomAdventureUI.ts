@@ -6,6 +6,7 @@ import type { RewardMode } from './adventureTypes';
 import { createNewPet } from './gameData';
 import { useGameStore } from './store';
 import { publicAsset } from './publicAsset';
+import { getClassPetAssetUrls, preloadClassPetAssets } from './assetPreloader';
 
 interface AdventureAssetDefinition extends SceneAssetTransform {
   asset_id: string;
@@ -97,6 +98,7 @@ export class ClassroomAdventureUI {
       .hatched-shell{position:absolute;bottom:18px;width:110px;height:55px;border-radius:15% 15% 55% 55%;background:linear-gradient(#a99adf,#5e4a9e);box-shadow:0 0 24px #8abfff}.companion{position:absolute;bottom:65px;font-size:58px;filter:drop-shadow(0 0 18px #9ceaff);animation:floaty 2.2s ease-in-out infinite}@keyframes floaty{50%{transform:translateY(-9px)}}.lantern{left:9%;bottom:18%;font-size:62px;filter:drop-shadow(0 0 15px #ffc55e)}
       .world-flash{position:absolute;z-index:18;inset:0;pointer-events:none;background:radial-gradient(circle at 78% 70%,rgba(255,247,170,.56),transparent 25%);animation:worldFlash 1.5s ease-out forwards}@keyframes worldFlash{to{opacity:0;transform:scale(1.1)}}.toast{position:absolute;z-index:60;left:50%;bottom:100px;transform:translateX(-50%);padding:12px 18px;border-radius:16px;background:#fff;color:#402c70;font-weight:900;box-shadow:0 12px 35px rgba(0,0,0,.35);animation:toastIn 2.4s ease forwards}@keyframes toastIn{0%{opacity:0;transform:translate(-50%,20px)}15%,75%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-12px)}}
       .modal{position:fixed;z-index:1000;inset:0;display:grid;place-items:center;padding:20px;background:rgba(2,8,27,.72);backdrop-filter:blur(8px)}.panel{width:min(720px,96vw);max-height:90vh;overflow:auto;padding:24px;border-radius:24px;background:linear-gradient(145deg,#172f68,#3b286f);border:1px solid rgba(255,255,255,.24);box-shadow:0 25px 80px rgba(0,0,0,.55)}.panel h2{margin:0 0 6px;font-size:28px}.panel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}.award-btn{text-align:left;padding:15px;background:linear-gradient(135deg,rgba(105,126,238,.95),rgba(106,70,178,.95));font-size:15px}.award-btn strong{font-size:22px;margin-right:7px}.panel-section{margin-top:18px;padding-top:16px;border-top:1px solid rgba(255,255,255,.16)}.settings-grid{display:grid;gap:11px;margin-top:12px}.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:9px 0}.setting-card{display:grid;grid-template-columns:minmax(150px,1fr) minmax(170px,260px);align-items:center;gap:14px;padding:12px 14px;border-radius:17px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}.setting-card label,.setting-card span{font-weight:1000}.setting-card input,.setting-card select{width:100%;min-height:42px;border:1px solid rgba(214,235,255,.38);border-radius:13px;padding:8px 12px;background:rgba(8,20,55,.72);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);outline:none}.setting-card input:focus,.setting-card select:focus{border-color:#9be7ff;box-shadow:0 0 0 3px rgba(119,217,255,.18),inset 0 1px 0 rgba(255,255,255,.12)}.setting-card select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#d9f3ff 50%),linear-gradient(135deg,#d9f3ff 50%,transparent 50%);background-position:calc(100% - 18px) 18px,calc(100% - 12px) 18px;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.close{float:right;width:38px;height:38px;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:20px}.choice-card{border:1px solid rgba(255,255,255,.26);border-radius:18px;padding:20px;background:rgba(255,255,255,.1);color:#fff;font-weight:900;font-size:18px}.choice-card .icon{display:block;font-size:50px;margin-bottom:8px}.event-stage{text-align:center;min-height:290px;display:grid;place-items:center}.event-icon{font-size:92px;filter:drop-shadow(0 0 25px #bceaff)}.scrapbook-card,.shop-card,.history-row{padding:15px;border-radius:16px;background:rgba(255,255,255,.09);margin-top:10px}.debug-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+      .preload-status{margin-top:12px;padding:13px 14px;border-radius:16px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.15)}.preload-track{height:16px;margin:10px 0;border-radius:999px;background:rgba(3,12,35,.72);overflow:hidden}.preload-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#66e0ff,#ffdc73);transition:width .25s ease}.preload-meta{font-size:13px;color:#dceaff;word-break:break-word}.preload-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.preload-warning{color:#ffe3a3;font-weight:900}
       @media(max-width:760px){.story-hud{top:70px;width:calc(100% - 24px);padding:10px}.story-hud.is-disabled{display:none}.goal-title{font-size:21px}.goal-copy{display:none}.currency{top:12px;left:12px}.dragon-name-badge{top:58px;left:12px}.needs-panel{top:98px;left:12px;width:190px}.teacher-button{top:12px;right:12px}.moon-egg-area{right:2%;bottom:15%;transform:scale(.74)}.bottom-bar{width:calc(100% - 20px);justify-content:center;bottom:8px}.bottom-bar button{padding:9px;font-size:12px}.reward-ready{right:10px;top:auto;bottom:75px}.panel{padding:18px}.panel-grid{grid-template-columns:1fr}.debug-grid{grid-template-columns:1fr 1fr}}
       @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
     `;
@@ -588,6 +590,7 @@ export class ClassroomAdventureUI {
         <button class="soft-btn" id="teacherAwardMore">Award Stars</button>
         <button class="soft-btn" id="scrapbookMore">Scrapbook</button>
         <button class="soft-btn" id="shopMore">Habitat Shop</button>
+        <button class="soft-btn" id="preloadAssets">Preload Assets</button>
         <button class="soft-btn" id="feedMagicalBerry">Feed Magical Berry</button>
         ${actions.map(([label, action]) => `<button class="soft-btn" data-animation="${action}">${label}</button>`).join('')}
       </div>
@@ -596,6 +599,7 @@ export class ClassroomAdventureUI {
     modal.querySelector('#teacherAwardMore')?.addEventListener('click', () => { modal.remove(); this.showAwardPanel(); });
     modal.querySelector('#scrapbookMore')?.addEventListener('click', () => { modal.remove(); this.showScrapbook(); });
     modal.querySelector('#shopMore')?.addEventListener('click', () => { modal.remove(); this.showShop(); });
+    modal.querySelector('#preloadAssets')?.addEventListener('click', () => { modal.remove(); this.showAssetPreloadPanel(); });
     modal.querySelector('#feedMagicalBerry')?.addEventListener('click', () => {
       void this.playMagicalBerryFeed();
       modal.remove();
@@ -607,6 +611,85 @@ export class ClassroomAdventureUI {
       if (animation === 'jumping_jacks') SoundEffects.playJumpingJacks();
       modal.remove();
     }));
+  }
+
+  private showAssetPreloadPanel(): void {
+    const urls = getClassPetAssetUrls();
+    const modal = this.makeModal('Preload Assets', `
+      <p>Download Class Pet models, sounds, and effects into this browser before class starts.</p>
+      <div class="preload-status" aria-live="polite">
+        <strong id="preloadTitle">Ready to download ${urls.length} files</strong>
+        <div class="preload-track"><div class="preload-fill" id="preloadFill"></div></div>
+        <div class="preload-meta" id="preloadMeta">Use a good connection if you can.</div>
+      </div>
+      <div class="preload-actions">
+        <button class="primary-btn" id="startPreload">Start Download</button>
+        <button class="soft-btn" id="cancelPreload" disabled>Cancel</button>
+      </div>
+    `);
+    const startButton = modal.querySelector<HTMLButtonElement>('#startPreload');
+    const cancelButton = modal.querySelector<HTMLButtonElement>('#cancelPreload');
+    const fill = modal.querySelector<HTMLElement>('#preloadFill');
+    const title = modal.querySelector<HTMLElement>('#preloadTitle');
+    const meta = modal.querySelector<HTMLElement>('#preloadMeta');
+    const controller = new AbortController();
+
+    cancelButton?.addEventListener('click', () => controller.abort());
+    modal.querySelector('.close')?.addEventListener('click', () => controller.abort());
+
+    startButton?.addEventListener('click', () => {
+      startButton.disabled = true;
+      if (cancelButton) cancelButton.disabled = false;
+      if (title) title.textContent = 'Downloading assets...';
+      if (meta) meta.textContent = 'Starting download.';
+
+      void preloadClassPetAssets(urls, controller.signal, (progress) => {
+        const percent = Math.round(progress.completed / progress.total * 100);
+        if (fill) fill.style.width = `${percent}%`;
+        if (title) title.textContent = `${progress.completed} / ${progress.total} files downloaded`;
+        if (meta) {
+          const fileName = this.assetNameFromUrl(progress.currentUrl);
+          meta.textContent = progress.result?.ok
+            ? `Cached ${fileName}`
+            : `Skipped ${fileName}: ${progress.result?.error ?? 'download failed'}`;
+          meta.classList.toggle('preload-warning', !progress.result?.ok);
+        }
+      }).then((summary) => {
+        if (cancelButton) cancelButton.disabled = true;
+        if (fill) fill.style.width = `${Math.round(summary.completed / summary.total * 100)}%`;
+        if (summary.cancelled) {
+          if (title) title.textContent = `Cancelled after ${summary.completed} / ${summary.total} files`;
+          if (meta) {
+            meta.textContent = 'You can run the download again later.';
+            meta.classList.add('preload-warning');
+          }
+          return;
+        }
+        if (summary.failed.length > 0) {
+          if (title) title.textContent = `${summary.completed - summary.failed.length} files cached, ${summary.failed.length} skipped`;
+          if (meta) {
+            meta.textContent = 'Some files timed out or failed. Try again on better WiFi.';
+            meta.classList.add('preload-warning');
+          }
+          return;
+        }
+        if (title) title.textContent = 'All Class Pet assets are ready';
+        if (meta) {
+          meta.textContent = 'Ball, berry, dragon, sounds, and adventure assets are cached in this browser.';
+          meta.classList.remove('preload-warning');
+        }
+        this.toast('Class Pet assets cached.');
+      });
+    });
+  }
+
+  private assetNameFromUrl(url: string): string {
+    try {
+      const pathname = new URL(url).pathname;
+      return decodeURIComponent(pathname.split('/').pop() || pathname);
+    } catch {
+      return url;
+    }
   }
 
   private async handleFeedButton(): Promise<void> {
